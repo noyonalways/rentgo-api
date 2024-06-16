@@ -4,7 +4,7 @@ const router: Router = Router();
 const moduleRoutes = [
   {
     path: "/",
-    routes: homeRoutes,
+    routes: "",
   },
 ];
 

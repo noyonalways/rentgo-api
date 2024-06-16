@@ -1,5 +1,4 @@
 import { Request, Response, Router } from "express";
-import mainRoutes from "../routes";
 
 const router: Router = Router();
 
@@ -14,6 +13,6 @@ router.get("/health", (_req: Request, res: Response) => {
 });
 
 // main routes
-router.use("/api", mainRoutes);
+// router.use("/api", mainRoutes);
 
 export default router;
