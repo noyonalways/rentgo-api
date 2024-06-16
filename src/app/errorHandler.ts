@@ -13,7 +13,7 @@ const notFound = (_req: Request, res: Response, _next: NextFunction) => {
 };
 
 const global: ErrorRequestHandler = (err, _req, res, _next) => {
-  let statusCode = err.statusCode;
+  let statusCode = 500;
   let message = "something went wrong";
   let errorMessages: TErrorMessages = [
     {
@@ -38,6 +38,7 @@ const global: ErrorRequestHandler = (err, _req, res, _next) => {
     message,
     errorMessages,
     stack: config.NODE_ENV === "development" ? err.stack : null,
+    err,
   });
 };
 

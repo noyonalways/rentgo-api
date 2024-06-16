@@ -1,1 +1,8 @@
-GET http://localhost:3000/fafd
+@baseURl= http://localhost:3000
+
+GET {{baseURl}}/health
+
+###
+
+POST {{baseURl}}/api/auth/signup
+Content-Type: application/json
