@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { userRoles } from "../user/user.constant";
 
+// todo: implement strong password validation
+
 const singUp = z.object({
   body: z
     .object({
@@ -24,14 +26,18 @@ const singUp = z.object({
         })
         .min(6, "password must be less than 6 characters")
         .max(32, "password can't be more than 32 characters"),
-      phone: z.string({
-        required_error: "phone is required",
-        invalid_type_error: "phone must be string",
-      }),
-      address: z.string({
-        required_error: "address is required",
-        invalid_type_error: "address must be string",
-      }),
+      phone: z
+        .string({
+          required_error: "phone is required",
+          invalid_type_error: "phone must be string",
+        })
+        .min(11, "phone must be 11 character"),
+      address: z
+        .string({
+          required_error: "address is required",
+          invalid_type_error: "address must be string",
+        })
+        .min(5, "address must be more than 5 character"),
     })
     .strict(),
 });

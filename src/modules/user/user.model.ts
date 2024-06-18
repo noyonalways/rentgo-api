@@ -1,3 +1,4 @@
+import bcrypt from "bcrypt";
 import { Schema, model } from "mongoose";
 import { userRoles } from "./user.constant";
 import { TUser } from "./user.interface";
@@ -32,6 +33,7 @@ const userSchema = new Schema<TUser>(
     password: {
       type: String,
       required: [true, "password is required"],
+      minlength: [6, "password must be at least 6 characters"],
     },
     phone: {
       type: String,
@@ -46,6 +48,12 @@ const userSchema = new Schema<TUser>(
     timestamps: true,
   },
 );
+
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
+});
 
 const User = model<TUser>("User", userSchema);
 export default User;

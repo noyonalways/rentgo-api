@@ -1,6 +1,10 @@
 import { ErrorRequestHandler, NextFunction, Request, Response } from "express";
+import { ZodError } from "zod";
 import config from "../config";
 import AppError from "../errors/AppError";
+import handleMongooseDuplicateIdError from "../errors/handleMongooseDuplicateIdError";
+import handleMongooseValidationError from "../errors/handleMongooseValidationError";
+import handleZodError from "../errors/handleZodError";
 import { TErrorMessages } from "../interface/error";
 
 const notFound = (_req: Request, res: Response, _next: NextFunction) => {
@@ -12,7 +16,7 @@ const notFound = (_req: Request, res: Response, _next: NextFunction) => {
   });
 };
 
-const global: ErrorRequestHandler = (err, _req, res, _next) => {
+const global: ErrorRequestHandler = (error, _req, res, _next) => {
   let statusCode = 500;
   let message = "something went wrong";
   let errorMessages: TErrorMessages = [
@@ -22,13 +26,31 @@ const global: ErrorRequestHandler = (err, _req, res, _next) => {
     },
   ];
 
-  if (err instanceof AppError) {
-    statusCode = err.statusCode;
-    message = err.message;
+  if (error instanceof ZodError) {
+    const simplifiedError = handleZodError(error);
+
+    statusCode = simplifiedError.statusCode;
+    message = simplifiedError.message;
+    errorMessages = simplifiedError.errorMessages;
+  } else if (error?.name === "ValidationError") {
+    const simplifiedError = handleMongooseValidationError(error);
+
+    statusCode = simplifiedError.statusCode;
+    message = simplifiedError.message;
+    errorMessages = simplifiedError.errorMessages;
+  } else if (error?.code === 11000) {
+    const simplifiedError = handleMongooseDuplicateIdError(error);
+
+    statusCode = simplifiedError.statusCode;
+    message = simplifiedError.message;
+    errorMessages = simplifiedError.errorMessages;
+  } else if (error instanceof AppError) {
+    statusCode = error.statusCode;
+    message = error.message;
     errorMessages = [
       {
         path: "",
-        message: err.message,
+        message: error.message,
       },
     ];
   }
@@ -37,8 +59,8 @@ const global: ErrorRequestHandler = (err, _req, res, _next) => {
     success: false,
     message,
     errorMessages,
-    stack: config.NODE_ENV === "development" ? err.stack : null,
-    err,
+    stack: config.NODE_ENV === "development" ? error.stack : null,
+    // error,
   });
 };
 
