@@ -1,12 +1,17 @@
+import httpStatus from "http-status";
 import catchAsync from "../../utils/catchAsync";
-import User from "../user/user.model";
+import sendResponse from "../../utils/sendResponse";
+import { authService } from "./auth.service";
 
 const signUp = catchAsync(async (req, res) => {
-  // const { body } = req;
-  // console.log(body);
+  const result = await authService.singUp(req.body);
 
-  await User.create(req.body);
-  res.end();
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.CREATED,
+    message: "User registered successfully",
+    data: result,
+  });
 });
 
 export const authController = {
