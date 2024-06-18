@@ -38,6 +38,8 @@ const getSingle = catchAsync(async (req, res) => {
   const { id } = req.params;
   const result = await carService.findByProperty("_id", id);
 
+  console.log(req.cookies);
+
   if (!result) {
     return sendResponse(res, {
       success: false,
@@ -55,8 +57,34 @@ const getSingle = catchAsync(async (req, res) => {
   });
 });
 
+const updateSingle = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await carService.updateSingle(id, req.body);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Car updated successfully",
+    data: result,
+  });
+});
+
+const deleteSingle = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await carService.deleteSingle(id);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Car deleted successfully",
+    data: result,
+  });
+});
+
 export const carController = {
   create,
   getAll,
   getSingle,
+  updateSingle,
+  deleteSingle,
 };

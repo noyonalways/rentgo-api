@@ -9,6 +9,10 @@ router
   .post(validateRequest(carValidationSchema.create), carController.create)
   .get(carController.getAll);
 
-router.route("/:id").get(carController.getSingle);
+router
+  .route("/:id")
+  .get(carController.getSingle)
+  .put(validateRequest(carValidationSchema.update), carController.updateSingle)
+  .delete(carController.deleteSingle);
 
 export default router;
