@@ -10,4 +10,10 @@ router.post(
   authController.signUp,
 );
 
+router.post(
+  "/signin",
+  validateRequest(authValidationSchema.singIn),
+  authController.signIn,
+);
+
 export default router;
