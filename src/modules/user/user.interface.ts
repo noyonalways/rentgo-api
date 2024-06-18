@@ -1,5 +1,5 @@
 import { JwtPayload } from "jsonwebtoken";
-import { Model } from "mongoose";
+import { Document, Model } from "mongoose";
 
 export type TUserRole = "user" | "admin";
 
@@ -13,7 +13,7 @@ export type TUser = {
 };
 
 export interface UserModel extends Model<TUser> {
-  isUserExists(key: string, value: string): Promise<TUser>;
+  isUserExists(key: string, value: string): Promise<TUser & Document>;
   isPasswordMatch(
     plainTextPassword: string,
     hashedPassword: string,

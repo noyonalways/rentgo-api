@@ -37,7 +37,9 @@ const singIn = async (payload: TUserSignIn) => {
     config.jwt_refresh_token_expires_in as string,
   );
 
-  return { accessToken, refreshToken };
+  user.password = "";
+
+  return { user, accessToken, refreshToken };
 };
 
 export const authService = {

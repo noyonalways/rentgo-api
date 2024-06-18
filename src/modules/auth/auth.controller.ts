@@ -15,7 +15,9 @@ const signUp = catchAsync(async (req, res) => {
 });
 
 const signIn = catchAsync(async (req, res) => {
-  const { accessToken, refreshToken } = await authService.singIn(req.body);
+  const { accessToken, refreshToken, user } = await authService.singIn(
+    req.body,
+  );
 
   res.cookie("refreshToken", refreshToken, {
     secure: false,
@@ -26,7 +28,8 @@ const signIn = catchAsync(async (req, res) => {
     success: true,
     statusCode: httpStatus.OK,
     message: "User logged in successfully",
-    data: { accessToken },
+    data: user,
+    token: accessToken,
   });
 });
 
