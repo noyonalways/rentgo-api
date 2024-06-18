@@ -11,11 +11,13 @@ const userSchema = new Schema<TUser, UserModel>(
   {
     name: {
       type: String,
+      trim: true,
       required: [true, "name is required"],
     },
     email: {
       type: String,
       lowercase: true,
+      trim: true,
       unique: true,
       required: [true, "email is required"],
       validate: {
@@ -41,10 +43,12 @@ const userSchema = new Schema<TUser, UserModel>(
     },
     phone: {
       type: String,
+      trim: true,
       required: [true, "phone is required"],
     },
     address: {
       type: String,
+      trim: true,
       required: [true, "address is required"],
     },
   },
