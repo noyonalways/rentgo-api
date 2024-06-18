@@ -38,8 +38,6 @@ const getSingle = catchAsync(async (req, res) => {
   const { id } = req.params;
   const result = await carService.findByProperty("_id", id);
 
-  console.log(req.cookies);
-
   if (!result) {
     return sendResponse(res, {
       success: false,

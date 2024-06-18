@@ -1,12 +1,12 @@
 import { JwtPayload } from "jsonwebtoken";
 import { Document, Model } from "mongoose";
 
-export type TUserRole = "user" | "admin";
+export type TUserRoles = "user" | "admin";
 
 export type TUser = {
   name: string;
   email: string;
-  role: TUserRole;
+  role: TUserRoles;
   password: string;
   phone: string;
   address: string;
