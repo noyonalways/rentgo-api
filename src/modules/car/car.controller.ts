@@ -15,7 +15,7 @@ const create = catchAsync(async (req, res) => {
 });
 
 const getAll = catchAsync(async (req, res) => {
-  const result = await carService.getAll();
+  const result = await carService.getAll(req.query);
 
   if (result.length <= 0) {
     return sendResponse(res, {
@@ -42,7 +42,7 @@ const getSingle = catchAsync(async (req, res) => {
     return sendResponse(res, {
       success: false,
       statusCode: httpStatus.NOT_FOUND,
-      message: "No Data found",
+      message: "Car not found",
       data: undefined,
     });
   }

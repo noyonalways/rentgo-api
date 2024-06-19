@@ -17,7 +17,7 @@ const book = catchAsync(async (req, res) => {
 
 // get all bookings
 const getAllBookings = catchAsync(async (req, res) => {
-  const result = await bookingService.getAllBookings();
+  const result = await bookingService.getAllBookings(req.query);
 
   if (result.length <= 0) {
     return sendResponse(res, {

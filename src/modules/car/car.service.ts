@@ -1,5 +1,6 @@
 import httpStatus from "http-status";
 import mongoose from "mongoose";
+import QueryBuilder from "mongoose-dynamic-querybuilder";
 import AppError from "../../errors/AppError";
 import Booking from "../booking/booking.model";
 import { TCar } from "./car.interface";
@@ -12,8 +13,14 @@ const create = (payload: TCar) => {
 };
 
 // get all cars
-const getAll = async () => {
-  return Car.find();
+const getAll = async (query: Record<string, unknown>) => {
+  const carQuery = new QueryBuilder(Car.find({}), query)
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  return carQuery.modelQuery;
 };
 
 // find car by property
@@ -31,8 +38,10 @@ const findByProperty = (key: string, value: string) => {
 const updateSingle = async (id: string, payload: TCar) => {
   const car = await findByProperty("_id", id);
   if (!car) {
-    throw new AppError("No Data found", httpStatus.NOT_FOUND);
+    throw new AppError("Car not found", httpStatus.NOT_FOUND);
   }
+
+  // check the car is booked or not then update
   if (car.status !== "available") {
     throw new AppError(
       "Can't Update, Car is already booked",
@@ -50,11 +59,12 @@ const updateSingle = async (id: string, payload: TCar) => {
 
 // delete a car
 const deleteSingle = async (id: string) => {
-  // TODO: handle delete car for check the car is booked or not then delete
   const car = await findByProperty("_id", id);
   if (!car) {
-    throw new AppError("No Data found", httpStatus.NOT_FOUND);
+    throw new AppError("Car not found", httpStatus.NOT_FOUND);
   }
+
+  // check the car is booked or not then delete
   if (car.status !== "available") {
     throw new AppError(
       "Can't delete, Car is already booked",
@@ -84,13 +94,13 @@ const returnTheCar = async (payload: {
   // find the booking
   const existingBooking = await Booking.findById(bookingId);
   if (!existingBooking) {
-    throw new AppError("No Data found", httpStatus.NOT_FOUND);
+    throw new AppError("Booking Data not found", httpStatus.NOT_FOUND);
   }
 
   // find the car
   const car = await Car.findById(existingBooking.car);
   if (!car) {
-    throw new AppError("No Data found", httpStatus.NOT_FOUND);
+    throw new AppError("Car not found", httpStatus.NOT_FOUND);
   }
 
   // calculate total time and totalCost

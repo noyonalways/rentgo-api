@@ -9,7 +9,7 @@ export const startAndEndTimeValidation = async (
   // end time: 12:30 => 1970-01-01T12:30
   const existingBooking = await Booking.findById(body.bookingId);
   if (!existingBooking) {
-    throw new AppError("No Data found", httpStatus.NOT_FOUND);
+    throw new AppError("Booking Data not found", httpStatus.NOT_FOUND);
   }
 
   if (existingBooking.endTime) {

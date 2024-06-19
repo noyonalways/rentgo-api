@@ -1,5 +1,6 @@
 import httpStatus from "http-status";
 import { JwtPayload } from "jsonwebtoken";
+import QueryBuilder from "mongoose-dynamic-querybuilder";
 import AppError from "../../errors/AppError";
 import Car from "../car/car.model";
 import { carService } from "../car/car.service";
@@ -10,12 +11,12 @@ import Booking from "./booking.model";
 const book = async (userData: JwtPayload, payload: Record<string, string>) => {
   const user = await userService.findByProperty("email", userData.email);
   if (!user) {
-    throw new AppError("No Data found", httpStatus.NOT_FOUND);
+    throw new AppError("User not found", httpStatus.NOT_FOUND);
   }
 
   const car = await carService.findByProperty("_id", payload.carId);
   if (!car) {
-    throw new AppError("No Data found", httpStatus.NOT_FOUND);
+    throw new AppError("Car not found", httpStatus.NOT_FOUND);
   }
   if (car.status !== "available") {
     throw new AppError("Car is not available", httpStatus.BAD_REQUEST);
@@ -67,21 +68,25 @@ const book = async (userData: JwtPayload, payload: Record<string, string>) => {
   }
 };
 
-/**
- * TODO: Query Parameters
- * - carId: ID of the car for which availability needs to be checked.
- * - date: The specific date for which availability needs to be checked (format: YYYY-MM-DD).
- */
 // get all bookings
-const getAllBookings = () => {
-  return Booking.find().populate("user").populate("car");
+const getAllBookings = (query: Record<string, unknown>) => {
+  const bookingQuery = new QueryBuilder(
+    Booking.find({}).populate("user").populate("car"),
+    query,
+  )
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  return bookingQuery.modelQuery;
 };
 
 // get user's bookings
 const getUserBookings = async (userData: JwtPayload) => {
   const user = await userService.findByProperty("email", userData.email);
   if (!user) {
-    throw new AppError("No Data found", httpStatus.NOT_FOUND);
+    throw new AppError("User not found", httpStatus.NOT_FOUND);
   }
 
   return Booking.find({ user: user._id, endTime: null })

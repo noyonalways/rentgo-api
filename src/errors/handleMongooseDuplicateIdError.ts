@@ -25,7 +25,7 @@ const handleMongooseDuplicateIdError = (
 
   return {
     statusCode,
-    message: "Duplicate Id",
+    message: "Duplicate Entry",
     errorMessages,
   };
 };
