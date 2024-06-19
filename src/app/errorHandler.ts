@@ -1,4 +1,5 @@
 import { ErrorRequestHandler, NextFunction, Request, Response } from "express";
+import { JsonWebTokenError } from "jsonwebtoken";
 import { ZodError } from "zod";
 import config from "../config";
 import AppError from "../errors/AppError";
@@ -44,6 +45,15 @@ const global: ErrorRequestHandler = (error, _req, res, _next) => {
     statusCode = simplifiedError.statusCode;
     message = simplifiedError.message;
     errorMessages = simplifiedError.errorMessages;
+  } else if (error instanceof JsonWebTokenError) {
+    statusCode = 401;
+    message = error.name;
+    errorMessages = [
+      {
+        path: "",
+        message: error.message,
+      },
+    ];
   } else if (error instanceof AppError) {
     statusCode = error.statusCode;
     message = error.message;

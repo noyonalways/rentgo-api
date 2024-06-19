@@ -9,9 +9,16 @@ const router: Router = Router();
 router
   .route("/")
   .post(
-    auth(USER_ROLE.admin),
+    auth(USER_ROLE.user),
     validateRequest(bookingValidationSchema.book),
     bookingController.book,
-  );
+  )
+  .get(auth(USER_ROLE.admin), bookingController.getAllBookings);
+
+router.get(
+  "/my-bookings",
+  auth(USER_ROLE.user),
+  bookingController.getUserBookings,
+);
 
 export default router;

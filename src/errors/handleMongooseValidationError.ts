@@ -13,7 +13,12 @@ const handleMongooseValidationError = (
     },
   );
 
-  const statusCode = 400;
+  const keywords = ["already", "exists"];
+  const errorMessage = Object.values(error.errors).toString().toLowerCase();
+
+  const statusCode = keywords.some((keyword) => errorMessage.includes(keyword))
+    ? 409
+    : 400;
 
   return {
     statusCode,

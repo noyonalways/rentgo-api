@@ -40,6 +40,7 @@ const userSchema = new Schema<TUser, UserModel>(
       type: String,
       required: [true, "password is required"],
       minlength: [6, "password must be at least 6 characters"],
+      select: 0,
     },
     phone: {
       type: String,
@@ -75,9 +76,9 @@ userSchema.statics.isUserExists = function (key: string, value: string) {
     if (!mongoose.Types.ObjectId.isValid(value)) {
       throw new AppError("Provide a valid object Id", httpStatus.BAD_REQUEST);
     }
-    return User.findById(value);
+    return User.findById(value).select("+password");
   }
-  return User.findOne({ [key]: value });
+  return User.findOne({ [key]: value }).select("+password");
 };
 
 userSchema.statics.isPasswordMatch = function (

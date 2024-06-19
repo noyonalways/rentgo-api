@@ -10,7 +10,7 @@ const book = catchAsync(async (req, res) => {
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.CREATED,
-    message: "Booking created successfully",
+    message: "Car booked successfully",
     data: result,
   });
 });
@@ -18,6 +18,15 @@ const book = catchAsync(async (req, res) => {
 // get all bookings
 const getAllBookings = catchAsync(async (req, res) => {
   const result = await bookingService.getAllBookings();
+
+  if (result.length <= 0) {
+    return sendResponse(res, {
+      success: false,
+      statusCode: httpStatus.NOT_FOUND,
+      message: "No Data found",
+      data: result,
+    });
+  }
 
   sendResponse(res, {
     success: true,
@@ -30,6 +39,15 @@ const getAllBookings = catchAsync(async (req, res) => {
 // get user's booking
 const getUserBookings = catchAsync(async (req, res) => {
   const result = await bookingService.getUserBookings(req.user);
+
+  if (result.length <= 0) {
+    return sendResponse(res, {
+      success: false,
+      statusCode: httpStatus.NOT_FOUND,
+      message: "No Data found",
+      data: result,
+    });
+  }
 
   sendResponse(res, {
     success: true,

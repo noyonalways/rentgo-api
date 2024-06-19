@@ -4,7 +4,7 @@ import { TBooking } from "./booking.interface";
 const bookingSchema = new Schema<TBooking>(
   {
     date: {
-      type: Date,
+      type: String,
       required: [true, "date is required"],
     },
     user: {

@@ -6,6 +6,11 @@ const checkTimeValidation = (time: string) => {
   return regex.test(time);
 };
 
+// const validateDate = (date: string) => {
+//   const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+//   return dateRegex.test(date); //yyyy-mm-dd
+// };
+
 const book = z.object({
   body: z
     .object({
@@ -22,14 +27,14 @@ const book = z.object({
           required_error: "date is required",
           invalid_type_error: "date must be string",
         })
-        .datetime({ message: "date is not valid" }),
+        .date("Invalid date format, expected 'YYYY-MM-DD' format"),
       startTime: z
         .string({
           required_error: "start time is required",
           invalid_type_error: "start time must be string",
         })
         .refine(checkTimeValidation, {
-          message: "Invalid time format , expected 'HH:MM' in 24 hours format",
+          message: "Invalid time format, expected 'HH:MM' in 24 hours format",
         }),
     })
     .strict(),

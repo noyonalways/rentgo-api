@@ -6,7 +6,7 @@ import User from "../user/user.model";
 import { TUserSignIn } from "./auth.interface";
 
 // sign up user
-const singUp = (payload: TUser) => {
+const singUp = async (payload: TUser) => {
   return User.create(payload);
 };
 
