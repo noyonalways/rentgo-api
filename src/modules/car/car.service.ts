@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import QueryBuilder from "mongoose-dynamic-querybuilder";
 import AppError from "../../errors/AppError";
 import Booking from "../booking/booking.model";
+import { searchableFields } from "./car.constant";
 import { TCar } from "./car.interface";
 import Car from "./car.model";
 import { calculateTotalTime } from "./car.utils";
@@ -18,7 +19,8 @@ const getAll = async (query: Record<string, unknown>) => {
     .filter()
     .sort()
     .paginate()
-    .fields();
+    .fields()
+    .search(searchableFields);
 
   return carQuery.modelQuery;
 };
