@@ -2,6 +2,9 @@ import { z } from "zod";
 import { userRoles } from "../user/user.constant";
 
 // todo: implement strong password validation
+const checkStrongPassword = (input: string) => {
+  return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&^_-]{6,}$/.test(input);
+};
 
 const singUp = z.object({
   body: z
@@ -25,7 +28,10 @@ const singUp = z.object({
           invalid_type_error: "password must be string",
         })
         .min(6, "password must be less than 6 characters")
-        .max(32, "password can't be more than 32 characters"),
+        .max(32, "password can't be more than 32 characters")
+        .refine(checkStrongPassword, {
+          message: "password must contain at least one letter and one number",
+        }),
       phone: z
         .string({
           required_error: "phone is required",
