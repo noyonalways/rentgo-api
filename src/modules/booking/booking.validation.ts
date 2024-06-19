@@ -1,10 +1,6 @@
 import mongoose from "mongoose";
 import { z } from "zod";
-
-const checkTimeValidation = (time: string) => {
-  const regex = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/; // 00-09 10-19 20-23
-  return regex.test(time);
-};
+import validateTime from "../../utils/validateTIme";
 
 // const validateDate = (date: string) => {
 //   const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
@@ -14,10 +10,10 @@ const checkTimeValidation = (time: string) => {
 const book = z.object({
   body: z
     .object({
-      car: z
+      carId: z
         .string({
-          required_error: "car id is required",
-          invalid_type_error: "car id must be string",
+          required_error: "carId is required",
+          invalid_type_error: "carId id must be string",
         })
         .refine((val) => mongoose.Types.ObjectId.isValid(val), {
           message: "invalid car id",
@@ -33,7 +29,7 @@ const book = z.object({
           required_error: "start time is required",
           invalid_type_error: "start time must be string",
         })
-        .refine(checkTimeValidation, {
+        .refine(validateTime, {
           message: "Invalid time format, expected 'HH:MM' in 24 hours format",
         }),
     })

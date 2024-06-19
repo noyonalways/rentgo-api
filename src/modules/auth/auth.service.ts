@@ -14,10 +14,10 @@ const singUp = async (payload: TUser) => {
 const singIn = async (payload: TUserSignIn) => {
   const user = await User.isUserExists("email", payload.email);
   if (!user) {
-    throw new AppError("user not found", httpStatus.NOT_FOUND);
+    throw new AppError("User not found", httpStatus.NOT_FOUND);
   }
   if (!(await User.isPasswordMatch(payload.password, user.password))) {
-    throw new AppError("incorrect credentials", httpStatus.UNAUTHORIZED);
+    throw new AppError("Incorrect credentials", httpStatus.UNAUTHORIZED);
   }
 
   const jwtPayload = {

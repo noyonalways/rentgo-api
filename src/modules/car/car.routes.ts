@@ -15,6 +15,13 @@ router
   )
   .get(auth(USER_ROLE.admin, USER_ROLE.user), carController.getAll);
 
+router.put(
+  "/return",
+  auth(USER_ROLE.admin),
+  validateRequest(carValidationSchema.returnTheCar),
+  carController.returnTheCar,
+);
+
 router
   .route("/:id")
   .get(auth(USER_ROLE.admin, USER_ROLE.user), carController.getSingle)

@@ -4,17 +4,16 @@ import AppError from "../../errors/AppError";
 import Car from "../car/car.model";
 import { carService } from "../car/car.service";
 import { userService } from "../user/user.service";
-import { TBooking } from "./booking.interface";
 import Booking from "./booking.model";
 
 // book a car
-const book = async (userData: JwtPayload, payload: TBooking) => {
+const book = async (userData: JwtPayload, payload: Record<string, string>) => {
   const user = await userService.findByProperty("email", userData.email);
   if (!user) {
     throw new AppError("No Data found", httpStatus.NOT_FOUND);
   }
 
-  const car = await carService.findByProperty("_id", payload.car.toString());
+  const car = await carService.findByProperty("_id", payload.carId);
   if (!car) {
     throw new AppError("No Data found", httpStatus.NOT_FOUND);
   }
@@ -34,7 +33,7 @@ const book = async (userData: JwtPayload, payload: TBooking) => {
     session.startTransaction();
 
     const updatedCar = await Car.findByIdAndUpdate(
-      payload.car,
+      payload.carId,
       {
         status: "unavailable",
       },
@@ -85,7 +84,9 @@ const getUserBookings = async (userData: JwtPayload) => {
     throw new AppError("No Data found", httpStatus.NOT_FOUND);
   }
 
-  return Booking.find({ user: user._id }).populate("user").populate("car");
+  return Booking.find({ user: user._id, endTime: null })
+    .populate("user")
+    .populate("car");
 };
 
 export const bookingService = {

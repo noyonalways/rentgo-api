@@ -79,10 +79,22 @@ const deleteSingle = catchAsync(async (req, res) => {
   });
 });
 
+const returnTheCar = catchAsync(async (req, res) => {
+  const result = await carService.returnTheCar(req.body);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Car returned successfully",
+    data: result,
+  });
+});
+
 export const carController = {
   create,
   getAll,
   getSingle,
   updateSingle,
   deleteSingle,
+  returnTheCar,
 };

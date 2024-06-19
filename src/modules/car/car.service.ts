@@ -1,8 +1,10 @@
 import httpStatus from "http-status";
 import mongoose from "mongoose";
 import AppError from "../../errors/AppError";
+import Booking from "../booking/booking.model";
 import { TCar } from "./car.interface";
 import Car from "./car.model";
+import { calculateTotalTime } from "./car.utils";
 
 // create a new car
 const create = (payload: TCar) => {
@@ -27,8 +29,15 @@ const findByProperty = (key: string, value: string) => {
 
 // update a car
 const updateSingle = async (id: string, payload: TCar) => {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new AppError("invalid objectId", httpStatus.BAD_REQUEST);
+  const car = await findByProperty("_id", id);
+  if (!car) {
+    throw new AppError("No Data found", httpStatus.NOT_FOUND);
+  }
+  if (car.status !== "available") {
+    throw new AppError(
+      "Can't Update, Car is already booked",
+      httpStatus.BAD_REQUEST,
+    );
   }
 
   const updatedCar = await Car.findByIdAndUpdate(id, payload, {
@@ -36,33 +45,101 @@ const updateSingle = async (id: string, payload: TCar) => {
     runValidators: true,
   });
 
-  if (!updatedCar) {
-    throw new AppError("No Data found", httpStatus.NOT_FOUND);
-  }
-
   return updatedCar;
 };
 
 // delete a car
 const deleteSingle = async (id: string) => {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new AppError("invalid objectId", httpStatus.BAD_REQUEST);
+  // TODO: handle delete car for check the car is booked or not then delete
+  const car = await findByProperty("_id", id);
+  if (!car) {
+    throw new AppError("No Data found", httpStatus.NOT_FOUND);
+  }
+  if (car.status !== "available") {
+    throw new AppError(
+      "Can't delete, Car is already booked",
+      httpStatus.BAD_REQUEST,
+    );
   }
 
   const deletedCar = await Car.findByIdAndUpdate(
     id,
-    { isDeleted: true },
+    { isDeleted: true, status: "unavailable" },
     {
       new: true,
       runValidators: true,
     },
   );
 
-  if (!deletedCar) {
+  return deletedCar;
+};
+
+// return the car
+const returnTheCar = async (payload: {
+  bookingId: string;
+  endTime: string;
+}) => {
+  const { bookingId, endTime } = payload;
+
+  // find the booking
+  const existingBooking = await Booking.findById(bookingId);
+  if (!existingBooking) {
     throw new AppError("No Data found", httpStatus.NOT_FOUND);
   }
 
-  return deletedCar;
+  // find the car
+  const car = await Car.findById(existingBooking.car);
+  if (!car) {
+    throw new AppError("No Data found", httpStatus.NOT_FOUND);
+  }
+
+  // calculate total time and totalCost
+  const totalTime = calculateTotalTime(existingBooking.startTime, endTime);
+  const totalCost = car?.pricePerHour * totalTime;
+
+  const session = await Booking.startSession();
+  try {
+    session.startTransaction();
+
+    // transaction-1
+    await Car.findByIdAndUpdate(
+      car._id,
+      {
+        status: "available",
+      },
+      {
+        session,
+        runValidators: true,
+      },
+    );
+
+    // transaction-2
+    const updatedBooking = await Booking.findByIdAndUpdate(
+      existingBooking._id,
+      {
+        totalCost,
+        endTime,
+      },
+      {
+        session,
+        new: true,
+        runValidators: true,
+      },
+    );
+
+    if (!updatedBooking) {
+      throw new AppError("Failed to Return The Car", httpStatus.BAD_REQUEST);
+    }
+
+    await session.commitTransaction();
+    session.endSession();
+
+    return (await updatedBooking.populate("user")).populate("car");
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+    throw error;
+  }
 };
 
 export const carService = {
@@ -71,4 +148,5 @@ export const carService = {
   findByProperty,
   updateSingle,
   deleteSingle,
+  returnTheCar,
 };
