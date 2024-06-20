@@ -93,9 +93,10 @@ const getUserBookings = async (
   }
 
   const userBookingQuery = new QueryBuilder(
-    Booking.find({}).populate("user").populate("car"),
+    Booking.find({ user: user._id }).populate("user").populate("car"),
     query,
   )
+    .filter()
     .sort()
     .paginate()
     .fields();

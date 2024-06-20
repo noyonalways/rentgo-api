@@ -44,6 +44,12 @@ const getAllBookings = catchAsync(async (req, res) => {
 
 // get user's booking
 const getUserBookings = catchAsync(async (req, res) => {
+  const newQuery = { ...req.query };
+  if (req.query.carId) {
+    delete newQuery.carId;
+    newQuery.car = req.query.carId;
+  }
+
   const result = await bookingService.getUserBookings(req.user, req.query);
 
   if (result.length <= 0) {
