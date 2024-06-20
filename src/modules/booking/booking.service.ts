@@ -83,15 +83,24 @@ const getAllBookings = (query: Record<string, unknown>) => {
 };
 
 // get user's bookings
-const getUserBookings = async (userData: JwtPayload) => {
+const getUserBookings = async (
+  userData: JwtPayload,
+  query: Record<string, unknown>,
+) => {
   const user = await userService.findByProperty("email", userData.email);
   if (!user) {
     throw new AppError("User not found", httpStatus.NOT_FOUND);
   }
 
-  return Booking.find({ user: user._id, endTime: null })
-    .populate("user")
-    .populate("car");
+  const userBookingQuery = new QueryBuilder(
+    Booking.find({}).populate("user").populate("car"),
+    query,
+  )
+    .sort()
+    .paginate()
+    .fields();
+
+  return userBookingQuery.modelQuery;
 };
 
 export const bookingService = {

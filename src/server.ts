@@ -1,26 +1,18 @@
 import { Server } from "http";
-import mongoose from "mongoose";
 import app from "./app/app";
 import config from "./config";
+import connectToDatabase from "./db";
 
 let server: Server;
 
 async function main() {
   try {
-    await mongoose
-      .connect(config.database_url as string, {
-        serverSelectionTimeoutMS: 5000,
-      })
-      .then(() => {
-        // eslint-disable-next-line no-console
-        console.log("Connected to database".cyan);
-      });
+    // database connection
+    await connectToDatabase();
 
     server = app.listen(config.port, () => {
       // eslint-disable-next-line no-console
-      console.log(
-        `Server is listening on http://localhost:${config.port}`.green,
-      );
+      console.log(`Server is listening on port ${config.port}`.green);
     });
   } catch (err) {
     // eslint-disable-next-line no-console

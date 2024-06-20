@@ -6,12 +6,18 @@ const router: Router = Router();
 
 router.get("/", (_req: Request, res: Response) => {
   res.status(200).json({
+    success: true,
+    statusCode: 200,
     message: "Hello World!",
   });
 });
 
 router.get("/health", (_req: Request, res: Response) => {
-  res.status(200).send("OK✅");
+  res.status(200).json({
+    success: true,
+    statusCode: 200,
+    message: "Server is Healthy✅",
+  });
 });
 
 // main routes

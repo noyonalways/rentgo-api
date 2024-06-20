@@ -17,7 +17,13 @@ const book = catchAsync(async (req, res) => {
 
 // get all bookings
 const getAllBookings = catchAsync(async (req, res) => {
-  const result = await bookingService.getAllBookings(req.query);
+  const newQuery = { ...req.query };
+  if (req.query.carId) {
+    delete newQuery.carId;
+    newQuery.car = req.query.carId;
+  }
+
+  const result = await bookingService.getAllBookings(newQuery);
 
   if (result.length <= 0) {
     return sendResponse(res, {
@@ -38,7 +44,7 @@ const getAllBookings = catchAsync(async (req, res) => {
 
 // get user's booking
 const getUserBookings = catchAsync(async (req, res) => {
-  const result = await bookingService.getUserBookings(req.user);
+  const result = await bookingService.getUserBookings(req.user, req.query);
 
   if (result.length <= 0) {
     return sendResponse(res, {

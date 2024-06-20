@@ -28,7 +28,7 @@ Both users and administrators need to register and log in to the car rental web 
 
 **Book a Ride**: Users can select their pick-up entering carId and startTime to book the perfect car for their needs.
 
-**Rental History**: They can easily access their booking history, allowing them to review past rentals.
+**Rental Histor**y: They can easily access their booking history, allowing them to review past rentals.
 
 ---
 
@@ -547,7 +547,7 @@ You must include "Bearer" at the beginning of the token!
 {
   "success": true,
   "statusCode": 200,
-  "message": "Car booked successfully",
+  "message": "Car returned successfully",
   "data": {
       "_id": "60d9c4e4f3b4b544b8b8d1c7",
       "date": "2024-06-15",
@@ -620,13 +620,13 @@ Implement proper error handling throughout the application. Use global error han
 ```json
 {
     "success": false,
-    "message": "E11000 duplicate key error collection: univerity-management.student index:
+    "message": "E11000 duplicate key error collection: univerity-management.students index:
                 email_1 dup key: { email: \\"user2@gmail.com\\" }",
     "errorMessages": [
         {
             "path": "",
-            "message": "E11000 duplicate key error collection: univerity-management students
-            index: email_1 dup key: { email: \\"user2@gmail.com\\" }"
+            "message": "E11000 duplicate key error collection: univerity-management.students
+                        index: email_1 dup key: { email: \\"user2@gmail.com\\" }"
         }
     ],
     "stack": "MongoServerError: E11000 duplicate key error collection: univerity-

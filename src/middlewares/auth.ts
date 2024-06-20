@@ -5,12 +5,18 @@ import AppError from "../errors/AppError";
 import { TUserRoles } from "../modules/user/user.interface";
 import User from "../modules/user/user.model";
 import catchAsync from "../utils/catchAsync";
+import sendResponse from "../utils/sendResponse";
 
 const auth = (...requiredRoles: TUserRoles[]) => {
-  return catchAsync(async (req, _res, next) => {
+  return catchAsync(async (req, res, next) => {
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) {
-      return next(new AppError("Unauthorized Access", httpStatus.UNAUTHORIZED));
+      return sendResponse(res, {
+        success: false,
+        statusCode: httpStatus.UNAUTHORIZED,
+        message: "You have no access to this route",
+        data: undefined,
+      });
     }
 
     const decoded = jwt.verify(
@@ -27,7 +33,12 @@ const auth = (...requiredRoles: TUserRoles[]) => {
     }
 
     if (requiredRoles && !requiredRoles.includes(role)) {
-      throw new AppError("Access Forbidden", httpStatus.FORBIDDEN);
+      return sendResponse(res, {
+        success: false,
+        statusCode: httpStatus.FORBIDDEN,
+        message: "Access Forbidden",
+        data: undefined,
+      });
     }
 
     req.user = decoded;
