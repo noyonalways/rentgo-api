@@ -6,18 +6,13 @@ import connectToDatabase from "./db";
 let server: Server;
 
 async function main() {
-  try {
-    // database connection
-    await connectToDatabase();
+  // database connection
+  await connectToDatabase();
 
-    server = app.listen(config.port, () => {
-      // eslint-disable-next-line no-console
-      console.log(`Server is listening on port ${config.port}`.green);
-    });
-  } catch (err) {
+  server = app.listen(config.port, () => {
     // eslint-disable-next-line no-console
-    console.log(err);
-  }
+    console.log(`Server is listening on port ${config.port}`.green);
+  });
 }
 
 main();

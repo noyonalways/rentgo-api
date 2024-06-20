@@ -7,5 +7,12 @@
     "source.organizeImports": "always"
   },
   "files.autoSave": "off",
-  "cSpell.words": ["datetime", "Noyon", "Rahman", "signin"]
+  "cSpell.words": [
+    "datetime",
+    "Noyon",
+    "Rahman",
+    "signin",
+    "signup",
+    "unopinionated"
+  ]
 }
