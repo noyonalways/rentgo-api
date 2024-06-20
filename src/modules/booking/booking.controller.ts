@@ -23,6 +23,11 @@ const getAllBookings = catchAsync(async (req, res) => {
     newQuery.car = req.query.carId;
   }
 
+  // modify the endTime field to filter the non returned bookings
+  if (req.query.endTime) {
+    req.query.endTime = null as unknown as string;
+  }
+
   const result = await bookingService.getAllBookings(newQuery);
 
   if (result.length <= 0) {
@@ -48,6 +53,11 @@ const getUserBookings = catchAsync(async (req, res) => {
   if (req.query.carId) {
     delete newQuery.carId;
     newQuery.car = req.query.carId;
+  }
+
+  // modify the endTime field to filter the user's current running booking
+  if (req.query.endTime) {
+    req.query.endTime = null as unknown as string;
   }
 
   const result = await bookingService.getUserBookings(req.user, req.query);
