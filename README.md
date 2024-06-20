@@ -17,11 +17,13 @@
     <p align="center">
       Reservation System for booking Car's
     <br />
-    <a href="https://car-rental-system-server.vercel.app/"><strong>Live Server Link »</strong></a>
-    <br />
-    <a href="#">Overview Video</a>
-    |
-    <a href="https://documenter.getpostman.com/view/20724567/2sA3XV8esS">Postman API Doc</a>
+    <a href="https://car-rental-system-server.vercel.app/">
+      <strong>Live Server Link »</strong>
+    </a>
+    
+[![OverView Video][overview-video-shield]][overview-video-url]
+[![Postman API DOC][postman-shield]][postman-api-doc-url]
+
   </p>
 </div>
 
@@ -145,3 +147,7 @@ yarn dev
 [vscode-theme-url]: https://marketplace.visualstudio.com/items?itemName=noyonalways.codevibe-themes
 [npm-shield]: https://img.shields.io/badge/-Package-black.svg?style=round-square&logo=npm&color=555&logoColor=white
 [npm-package-url]: https://www.npmjs.com/package/the-magic-readme
+[postman-shield]: https://img.shields.io/badge/-Postman_API_DOC-black.svg?style=round-square&logo=postman&color=555
+[postman-api-doc-url]: https://documenter.getpostman.com/view/20724567/2sA3XV8esS
+[overview-video-shield]: https://img.shields.io/badge/-Overview_Video-black.svg?style=round-square&logo=youtube&color=555&logoColor=c4302b
+[overview-video-url]: https://example.com/video
