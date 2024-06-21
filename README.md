@@ -154,4 +154,4 @@ yarn dev
 [postman-shield]: https://img.shields.io/badge/-Postman_API_DOC-black.svg?style=round-square&logo=postman&color=555
 [postman-api-doc-url]: https://documenter.getpostman.com/view/20724567/2sA3XV8esS
 [overview-video-shield]: https://img.shields.io/badge/-Overview_Video-black.svg?style=round-square&logo=youtube&color=555&logoColor=c4302b
-[overview-video-url]: https://example.com/video
+[overview-video-url]: https://youtu.be/J4QolLkmus4
