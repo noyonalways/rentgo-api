@@ -16,4 +16,10 @@ router.post(
   authController.signIn,
 );
 
+router.post(
+  "/refresh-token",
+  validateRequest(authValidationSchema.refreshToken),
+  authController.refreshToken,
+);
+
 export default router;

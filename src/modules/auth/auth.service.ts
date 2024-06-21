@@ -1,4 +1,5 @@
 import httpStatus from "http-status";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import config from "../../config";
 import AppError from "../../errors/AppError";
 import { TUser } from "../user/user.interface";
@@ -42,7 +43,37 @@ const singIn = async (payload: TUserSignIn) => {
   return { user, accessToken, refreshToken };
 };
 
+// generate access token using access token
+const refreshToken = async (refreshToken: string) => {
+  const decoded = jwt.verify(
+    refreshToken,
+    config.jwt_refresh_token_secret as string,
+  ) as JwtPayload;
+
+  const { email } = decoded;
+
+  // check the user exist
+  const user = await User.isUserExists("email", email);
+  if (!user) {
+    throw new AppError("User not found", httpStatus.NOT_FOUND);
+  }
+
+  const jwtPayload = {
+    email: user.email,
+    role: user.role,
+  };
+
+  const accessToken = User.createToken(
+    jwtPayload,
+    config.jwt_access_token_secret as string,
+    config.jwt_access_token_expires_in as string,
+  );
+
+  return { accessToken };
+};
+
 export const authService = {
   singUp,
   singIn,
+  refreshToken,
 };

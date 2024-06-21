@@ -34,7 +34,21 @@ const signIn = catchAsync(async (req, res) => {
   });
 });
 
+// generate access token using refresh token
+const refreshToken = catchAsync(async (req, res) => {
+  const { refreshToken } = req.cookies;
+  const result = await authService.refreshToken(refreshToken);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Access token retrieved successfully",
+    data: result,
+  });
+});
+
 export const authController = {
   signUp,
   signIn,
+  refreshToken,
 };

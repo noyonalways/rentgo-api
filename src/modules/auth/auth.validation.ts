@@ -68,7 +68,19 @@ const singIn = z.object({
     .strict(),
 });
 
+const refreshToken = z.object({
+  cookies: z
+    .object({
+      refreshToken: z.string({
+        invalid_type_error: "refreshToken must be a string",
+        required_error: "refreshToken is required",
+      }),
+    })
+    .strict(),
+});
+
 export const authValidationSchema = {
   singUp,
   singIn,
+  refreshToken,
 };
