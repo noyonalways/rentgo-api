@@ -13,7 +13,7 @@ router
     validateRequest(carValidationSchema.create),
     carController.create,
   )
-  .get(auth(USER_ROLE.admin, USER_ROLE.user), carController.getAll);
+  .get(carController.getAll);
 
 router.put(
   "/return",
@@ -24,7 +24,7 @@ router.put(
 
 router
   .route("/:id")
-  .get(auth(USER_ROLE.admin, USER_ROLE.user), carController.getSingle)
+  .get(carController.getSingle)
   .put(
     auth(USER_ROLE.admin),
     validateRequest(carValidationSchema.update),
