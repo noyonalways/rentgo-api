@@ -29,7 +29,34 @@ const changeStatus = async (id: string, payload: Pick<TUser, "status">) => {
   return user;
 };
 
+// make admin
+const makeAdmin = async (id: string) => {
+  const user = await User.findById(id);
+
+  if (!user) {
+    throw new AppError("User not found", httpStatus.NOT_FOUND);
+  }
+
+  if (user.status === "blocked") {
+    throw new AppError("User is blocked", httpStatus.FORBIDDEN);
+  }
+
+  if (user.role === "admin") {
+    throw new AppError("User is already admin", httpStatus.BAD_REQUEST);
+  }
+
+  return User.findByIdAndUpdate(
+    id,
+    { role: "admin" },
+    {
+      new: true,
+      runValidators: true,
+    },
+  );
+};
+
 export const userService = {
   findByProperty,
   changeStatus,
+  makeAdmin,
 };

@@ -13,4 +13,10 @@ router.patch(
   userController.changeStatus,
 );
 
+router.patch(
+  "/:id/make-admin",
+  auth(USER_ROLE.admin),
+  userController.makeAdmin,
+);
+
 export default router;
