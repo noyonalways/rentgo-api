@@ -21,7 +21,7 @@ router.get("/health", (_req: Request, res: Response) => {
 });
 
 // main routes
-router.use("/api", mainRoutes);
+router.use("/api/v1", mainRoutes);
 
 // error handlers
 router.use(errorHandler.notFound);

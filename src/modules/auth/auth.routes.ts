@@ -1,7 +1,10 @@
 import { Router } from "express";
+import auth from "../../middlewares/auth";
 import validateRequest from "../../middlewares/validateRequest";
+import { USER_ROLE } from "../user/user.constant";
 import { authController } from "./auth.controller";
 import { authValidationSchema } from "./auth.validation";
+
 const router: Router = Router();
 
 router.post(
@@ -16,10 +19,12 @@ router.post(
   authController.signIn,
 );
 
+router.get("/me", auth(USER_ROLE.user), authController.getMe);
+
 router.post(
   "/refresh-token",
   validateRequest(authValidationSchema.refreshToken),
-  authController.refreshToken,
+  authController.generateNEwAccessToken,
 );
 
 export default router;

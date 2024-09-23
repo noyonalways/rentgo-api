@@ -40,11 +40,23 @@ const singIn = async (payload: TUserSignIn) => {
 
   user.password = "";
 
-  return { user, accessToken, refreshToken };
+  return { accessToken, refreshToken };
 };
 
-// generate access token using access token
-const refreshToken = async (refreshToken: string) => {
+// get singed user
+const getMe = async (payload: JwtPayload) => {
+  const user = await User.isUserExists("email", payload.email);
+  if (!user) {
+    throw new AppError("User not found", httpStatus.NOT_FOUND);
+  }
+
+  user.password = "";
+
+  return user;
+};
+
+// generate access token using refresh token
+const generateNewAccessToken = async (refreshToken: string) => {
   const decoded = jwt.verify(
     refreshToken,
     config.jwt_refresh_token_secret as string,
@@ -58,6 +70,18 @@ const refreshToken = async (refreshToken: string) => {
     throw new AppError("User not found", httpStatus.NOT_FOUND);
   }
 
+  // check the user is deleted or not
+  if (user.isDeleted) {
+    throw new AppError("User is already deleted", httpStatus.FORBIDDEN);
+  }
+
+  // check the user is block or active
+  if (user.status === "blocked") {
+    throw new AppError("User is blocked", httpStatus.FORBIDDEN);
+  }
+
+  // TODO: password change check validation
+
   const jwtPayload = {
     email: user.email,
     role: user.role,
@@ -69,11 +93,12 @@ const refreshToken = async (refreshToken: string) => {
     config.jwt_access_token_expires_in as string,
   );
 
-  return { accessToken };
+  return { token: accessToken };
 };
 
 export const authService = {
   singUp,
   singIn,
-  refreshToken,
+  getMe,
+  generateNewAccessToken,
 };

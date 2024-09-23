@@ -9,7 +9,7 @@ import handleZodError from "../errors/handleZodError";
 import { TErrorMessages } from "../interface/error";
 
 const notFound = (_req: Request, res: Response, _next: NextFunction) => {
-  const err = new AppError("Not Found", 404);
+  const err = new AppError("Api Not Found", 404);
   res.status(err.statusCode).json({
     success: false,
     statusCode: err.statusCode,
@@ -19,11 +19,11 @@ const notFound = (_req: Request, res: Response, _next: NextFunction) => {
 
 const global: ErrorRequestHandler = (error, _req, res, _next) => {
   let statusCode = 500;
-  let message = "something went wrong";
+  let message = "Something went wrong";
   let errorMessages: TErrorMessages = [
     {
       path: "",
-      message: "something went wrong",
+      message: "Something went wrong",
     },
   ];
 

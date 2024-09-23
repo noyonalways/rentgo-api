@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import mongoose, { Schema, model } from "mongoose";
 import config from "../../config";
 import AppError from "../../errors/AppError";
-import { userRoles } from "./user.constant";
+import { userRoles, userStatus } from "./user.constant";
 import { TUser, UserModel } from "./user.interface";
 
 const userSchema = new Schema<TUser, UserModel>(
@@ -12,14 +12,14 @@ const userSchema = new Schema<TUser, UserModel>(
     name: {
       type: String,
       trim: true,
-      required: [true, "name is required"],
+      required: [true, "Name is required"],
     },
     email: {
       type: String,
       lowercase: true,
       trim: true,
       unique: true,
-      required: [true, "email is required"],
+      required: [true, "Email is required"],
       validate: {
         validator: async function (email: string): Promise<boolean> {
           const user = await User.findOne({ email });
@@ -28,29 +28,67 @@ const userSchema = new Schema<TUser, UserModel>(
         message: "Email already exists",
       },
     },
+    phone: {
+      type: String,
+      trim: true,
+      required: [true, "Phone is required"],
+    },
+    profileImage: {
+      type: String,
+      trim: true,
+      default: "",
+    },
     role: {
       type: String,
       enum: {
         values: userRoles,
         message: "{VALUE} is not a valid user role",
       },
-      required: [true, "role is required"],
+      default: "user",
+      required: [true, "Role is required"],
+    },
+    status: {
+      type: String,
+      enum: {
+        values: userStatus,
+        message: "{VALUE} is not a valid user status",
+      },
+      default: "active",
+      required: [true, "Status is required"],
     },
     password: {
       type: String,
-      required: [true, "password is required"],
-      minlength: [6, "password must be at least 6 characters"],
+      required: [true, "Password is required"],
+      minlength: [6, "Password must be at least 6 characters"],
       select: 0,
     },
-    phone: {
+    dateOfBirth: {
+      type: Date,
+      trim: true,
+      required: [true, "Date of birth is required"],
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    nidOrPassport: {
       type: String,
       trim: true,
-      required: [true, "phone is required"],
+      default: "",
+    },
+    drivingLicense: {
+      type: String,
+      trim: true,
+      default: "",
     },
     address: {
       type: String,
       trim: true,
-      required: [true, "address is required"],
+      required: [true, "Address is required"],
     },
   },
   {
@@ -71,6 +109,7 @@ userSchema.post("save", function (doc, next) {
   next();
 });
 
+// user statics methods
 userSchema.statics.isUserExists = function (key: string, value: string) {
   if (key === "_id") {
     if (!mongoose.Types.ObjectId.isValid(value)) {
