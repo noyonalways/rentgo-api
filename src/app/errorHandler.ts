@@ -2,10 +2,12 @@ import { ErrorRequestHandler, NextFunction, Request, Response } from "express";
 import { JsonWebTokenError } from "jsonwebtoken";
 import { ZodError } from "zod";
 import config from "../config";
-import AppError from "../errors/AppError";
-import handleMongooseDuplicateIdError from "../errors/handleMongooseDuplicateIdError";
-import handleMongooseValidationError from "../errors/handleMongooseValidationError";
-import handleZodError from "../errors/handleZodError";
+import {
+  AppError,
+  handleMongooseDuplicateIdError,
+  handleMongooseValidationError,
+  handleZodError,
+} from "../errors";
 import { TErrorMessages } from "../interface/error";
 
 const notFound = (_req: Request, res: Response, _next: NextFunction) => {

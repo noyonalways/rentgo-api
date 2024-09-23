@@ -1,7 +1,7 @@
 import httpStatus from "http-status";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import config from "../../config";
-import AppError from "../../errors/AppError";
+import { AppError } from "../../errors";
 import { TUser } from "../user/user.interface";
 import User from "../user/user.model";
 import { TUserSignIn } from "./auth.interface";
@@ -14,11 +14,17 @@ const singUp = async (payload: TUser) => {
 // sing in user
 const singIn = async (payload: TUserSignIn) => {
   const user = await User.isUserExists("email", payload.email);
+
   if (!user) {
     throw new AppError("User not found", httpStatus.NOT_FOUND);
   }
+
   if (!(await User.isPasswordMatch(payload.password, user.password))) {
     throw new AppError("Incorrect credentials", httpStatus.UNAUTHORIZED);
+  }
+
+  if (user.status === "blocked") {
+    throw new AppError("User is blocked", httpStatus.FORBIDDEN);
   }
 
   const jwtPayload = {

@@ -1,6 +1,5 @@
 import httpStatus from "http-status";
-import catchAsync from "../../utils/catchAsync";
-import sendResponse from "../../utils/sendResponse";
+import { catchAsync, sendResponse } from "../../utils";
 import { carService } from "./car.service";
 
 const create = catchAsync(async (req, res) => {

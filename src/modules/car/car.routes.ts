@@ -1,9 +1,9 @@
 import { Router } from "express";
-import validateRequest from "../../middlewares/validateRequest";
+import { auth, validateRequest } from "../../middlewares";
 import { USER_ROLE } from "../user/user.constant";
-import auth from "./../../middlewares/auth";
 import { carController } from "./car.controller";
 import { carValidationSchema } from "./car.validation";
+
 const router: Router = Router();
 
 router
