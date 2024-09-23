@@ -43,16 +43,29 @@ const singIn = async (payload: TUserSignIn) => {
   return { accessToken, refreshToken };
 };
 
-// get singed user
+// get signed in user
 const getMe = async (payload: JwtPayload) => {
   const user = await User.isUserExists("email", payload.email);
   if (!user) {
     throw new AppError("User not found", httpStatus.NOT_FOUND);
   }
-
   user.password = "";
-
   return user;
+};
+
+// update user details
+const updateProfile = async (email: string, payload: TUser) => {
+  const user = await User.isUserExists("email", email);
+  if (!user) {
+    throw new AppError("User not found", httpStatus.NOT_FOUND);
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(user._id, payload, {
+    new: true,
+    runValidators: true,
+  });
+
+  return updatedUser;
 };
 
 // generate access token using refresh token
@@ -100,5 +113,6 @@ export const authService = {
   singUp,
   singIn,
   getMe,
+  updateProfile,
   generateNewAccessToken,
 };

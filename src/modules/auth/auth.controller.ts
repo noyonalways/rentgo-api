@@ -44,6 +44,17 @@ const getMe = catchAsync(async (req, res) => {
   });
 });
 
+// update user details (current signed in user)
+const updateProfile = catchAsync(async (req, res) => {
+  const updatedUser = await authService.updateProfile(req.user.email, req.body);
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "User profile updated successfully",
+    data: updatedUser,
+  });
+});
+
 // generate access token using refresh token
 const generateNEwAccessToken = catchAsync(async (req, res) => {
   const { refreshToken } = req.cookies;
@@ -61,5 +72,6 @@ export const authController = {
   signUp,
   signIn,
   getMe,
+  updateProfile,
   generateNEwAccessToken,
 };

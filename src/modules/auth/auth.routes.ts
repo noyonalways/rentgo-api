@@ -2,6 +2,7 @@ import { Router } from "express";
 import auth from "../../middlewares/auth";
 import validateRequest from "../../middlewares/validateRequest";
 import { USER_ROLE } from "../user/user.constant";
+import { userValidationSchema } from "../user/user.validation";
 import { authController } from "./auth.controller";
 import { authValidationSchema } from "./auth.validation";
 
@@ -19,7 +20,14 @@ router.post(
   authController.signIn,
 );
 
-router.get("/me", auth(USER_ROLE.user), authController.getMe);
+router.get("/me", auth(USER_ROLE.user, USER_ROLE.admin), authController.getMe);
+
+router.patch(
+  "/update-profile",
+  auth(USER_ROLE.user, USER_ROLE.admin),
+  validateRequest(userValidationSchema.updateProfile),
+  authController.updateProfile,
+);
 
 router.post(
   "/refresh-token",
