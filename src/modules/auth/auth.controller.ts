@@ -10,15 +10,13 @@ const signUp = catchAsync(async (req, res) => {
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.CREATED,
-    message: "User registered successfully",
+    message: "User Sing Up successfully",
     data: result,
   });
 });
 
 const signIn = catchAsync(async (req, res) => {
-  const { accessToken, refreshToken, user } = await authService.singIn(
-    req.body,
-  );
+  const { accessToken, refreshToken } = await authService.singIn(req.body);
 
   res.cookie("refreshToken", refreshToken, {
     secure: config.NODE_ENV === "production",
@@ -28,16 +26,28 @@ const signIn = catchAsync(async (req, res) => {
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
-    message: "User logged in successfully",
+    message: "User Sign In successfully",
+    data: {
+      token: accessToken,
+    },
+  });
+});
+
+// get me (current signed in user)
+const getMe = catchAsync(async (req, res) => {
+  const user = await authService.getMe(req.user);
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "User fetched successfully",
     data: user,
-    token: accessToken,
   });
 });
 
 // generate access token using refresh token
-const refreshToken = catchAsync(async (req, res) => {
+const generateNEwAccessToken = catchAsync(async (req, res) => {
   const { refreshToken } = req.cookies;
-  const result = await authService.refreshToken(refreshToken);
+  const result = await authService.generateNewAccessToken(refreshToken);
 
   sendResponse(res, {
     success: true,
@@ -50,5 +60,6 @@ const refreshToken = catchAsync(async (req, res) => {
 export const authController = {
   signUp,
   signIn,
-  refreshToken,
+  getMe,
+  generateNEwAccessToken,
 };

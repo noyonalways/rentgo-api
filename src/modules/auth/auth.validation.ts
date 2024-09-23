@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { userRoles } from "../user/user.constant";
 
 // todo: implement strong password validation
 const checkStrongPassword = (input: string) => {
@@ -11,39 +10,46 @@ const singUp = z.object({
     .object({
       name: z
         .string({
-          required_error: "name is required",
-          invalid_type_error: "name must be string",
+          required_error: "Name is required",
+          invalid_type_error: "Name must be string",
         })
-        .min(1, "name must be more than 1 character"),
+        .min(1, "Name must be more than 1 character"),
       email: z
         .string({
-          required_error: "email is required",
-          invalid_type_error: "email must be string",
+          required_error: "Email is required",
+          invalid_type_error: "Email must be string",
         })
-        .email("provide a valid email address"),
-      role: z.enum([...userRoles] as [string, ...string[]]),
+        .email("Provide a valid email address"),
+      phone: z.string({
+        required_error: "Phone is required",
+        invalid_type_error: "Phone must be string",
+      }),
+      profileImage: z
+        .string({
+          invalid_type_error: "Profile Image must be string",
+        })
+        .url({ message: "Provide a valid url" })
+        .optional(),
       password: z
         .string({
-          required_error: "password is required",
-          invalid_type_error: "password must be string",
+          required_error: "Password is required",
+          invalid_type_error: "Password must be string",
         })
-        .min(6, "password must be less than 6 characters")
-        .max(32, "password can't be more than 32 characters")
+        .min(6, "Password must be less than 6 characters")
+        .max(32, "Password can't be more than 32 characters")
         .refine(checkStrongPassword, {
-          message: "password must contain at least one letter and one number",
+          message: "Password must contain at least one letter and one number",
         }),
-      phone: z
+      dateOfBirth: z
         .string({
-          required_error: "phone is required",
-          invalid_type_error: "phone must be string",
+          required_error: "Date of Birth is required",
+          invalid_type_error: "Date of Birth must be string",
         })
-        .min(11, "phone must be 11 character"),
-      address: z
-        .string({
-          required_error: "address is required",
-          invalid_type_error: "address must be string",
-        })
-        .min(5, "address must be more than 5 character"),
+        .date("Invalid Date"),
+      address: z.string({
+        required_error: "Address is required",
+        invalid_type_error: "Address must be string",
+      }),
     })
     .strict(),
 });
@@ -53,17 +59,17 @@ const singIn = z.object({
     .object({
       email: z
         .string({
-          required_error: "email is required",
-          invalid_type_error: "email must be string",
+          required_error: "Email is required",
+          invalid_type_error: "Email must be string",
         })
-        .email("provide a valid email address"),
+        .email("Provide a valid email address"),
       password: z
         .string({
-          required_error: "password is required",
-          invalid_type_error: "password must be string",
+          required_error: "Password is required",
+          invalid_type_error: "Password must be string",
         })
-        .min(6, "password must be less than 6 characters")
-        .max(32, "password can't be more than 32 characters"),
+        .min(6, "Password must be less than 6 characters")
+        .max(32, "Password can't be more than 32 characters"),
     })
     .strict(),
 });
@@ -72,8 +78,8 @@ const refreshToken = z.object({
   cookies: z
     .object({
       refreshToken: z.string({
-        invalid_type_error: "refreshToken must be a string",
-        required_error: "refreshToken is required",
+        invalid_type_error: "Refresh Token must be a string",
+        required_error: "Refresh Token is required",
       }),
     })
     .strict(),

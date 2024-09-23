@@ -14,7 +14,7 @@ const auth = (...requiredRoles: TUserRoles[]) => {
       return sendResponse(res, {
         success: false,
         statusCode: httpStatus.UNAUTHORIZED,
-        message: "You have no access to this route",
+        message: "Unauthorized Access",
         data: undefined,
       });
     }

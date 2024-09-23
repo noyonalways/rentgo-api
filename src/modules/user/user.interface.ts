@@ -2,13 +2,21 @@ import { JwtPayload } from "jsonwebtoken";
 import { Document, Model } from "mongoose";
 
 export type TUserRoles = "user" | "admin";
+export type TUserStatus = "active" | "blocked";
 
 export type TUser = {
   name: string;
   email: string;
-  role: TUserRoles;
-  password: string;
   phone: string;
+  profileImage: string;
+  role: TUserRoles;
+  status: TUserStatus;
+  dateOfBirth: Date;
+  password: string;
+  isDeleted: boolean;
+  isVerified: boolean;
+  nidOrPassport: string;
+  drivingLicense: string;
   address: string;
 };
 
