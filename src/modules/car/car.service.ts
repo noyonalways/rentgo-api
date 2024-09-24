@@ -1,7 +1,7 @@
 import httpStatus from "http-status";
 import mongoose from "mongoose";
 import QueryBuilder from "mongoose-dynamic-querybuilder";
-import AppError from "../../errors/AppError";
+import { AppError } from "../../errors";
 import Booking from "../booking/booking.model";
 import { searchableFields } from "./car.constant";
 import { TCar } from "./car.interface";

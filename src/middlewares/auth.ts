@@ -1,11 +1,10 @@
 import httpStatus from "http-status";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import config from "../config";
-import AppError from "../errors/AppError";
+import { AppError } from "../errors";
 import { TUserRoles } from "../modules/user/user.interface";
 import User from "../modules/user/user.model";
-import catchAsync from "../utils/catchAsync";
-import sendResponse from "../utils/sendResponse";
+import { catchAsync, sendResponse } from "../utils";
 
 const auth = (...requiredRoles: TUserRoles[]) => {
   return catchAsync(async (req, res, next) => {

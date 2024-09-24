@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { z } from "zod";
-import validateTime from "../../utils/validateTIme";
+import { validateTime } from "../../utils";
 import { startAndEndTimeValidation } from "./car.utils";
 
 const create = z.object({
