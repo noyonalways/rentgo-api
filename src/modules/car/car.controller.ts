@@ -14,7 +14,7 @@ const create = catchAsync(async (req, res) => {
 });
 
 const getAll = catchAsync(async (req, res) => {
-  const result = await carService.getAll(req.query);
+  const { meta, result } = await carService.getAll(req.query);
 
   if (result.length <= 0) {
     return sendResponse(res, {
@@ -29,6 +29,7 @@ const getAll = catchAsync(async (req, res) => {
     success: true,
     statusCode: httpStatus.OK,
     message: "Cars retrieved successfully",
+    meta,
     data: result,
   });
 });

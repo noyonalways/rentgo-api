@@ -1,6 +1,6 @@
 import httpStatus from "http-status";
 import { JwtPayload } from "jsonwebtoken";
-import QueryBuilder from "mongoose-dynamic-querybuilder";
+import { QueryBuilder } from "../../builder";
 import { AppError } from "../../errors";
 import Car from "../car/car.model";
 import { carService } from "../car/car.service";

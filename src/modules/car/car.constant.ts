@@ -1,5 +1,15 @@
-import { TCarStatus } from "./car.interface";
+import { TCarStatus, TMileageUnit, TTransmission } from "./car.interface";
 
 export const carStatus: TCarStatus[] = ["available", "unavailable"];
+export const carTransMission: TTransmission[] = ["automatic", "manual"];
+export const carMileageUnit: TMileageUnit[] = ["kilometers", "miles"];
 
-export const searchableFields = ["name", "description"];
+// searchable fields
+export const searchableFields = [
+  "name",
+  "description",
+  "model",
+  "brand",
+  "type",
+  "category",
+];

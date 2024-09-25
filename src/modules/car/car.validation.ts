@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { z } from "zod";
 import { validateTime } from "../../utils";
+import { carMileageUnit, carStatus, carTransMission } from "./car.constant";
 import { startAndEndTimeValidation } from "./car.utils";
 
 const create = z.object({
@@ -8,43 +9,94 @@ const create = z.object({
     .object({
       name: z
         .string({
-          required_error: "name is required",
-          invalid_type_error: "name must be string",
+          required_error: "Name is required",
+          invalid_type_error: "Name must be string",
         })
-        .min(1, "name must be more than 1 character"),
+        .min(1, "Name must be more than 1 character"),
       description: z
         .string({
-          required_error: "description is required",
-          invalid_type_error: "description must be string",
+          required_error: "Description is required",
+          invalid_type_error: "Description must be string",
         })
-        .min(20, "description must be more than 20 character"),
+        .min(20, "Description must be more than 20 character"),
+      image: z
+        .string({
+          required_error: "Image is required",
+          invalid_type_error: "Image must be string",
+        })
+        .url("Provide a valid url"),
+      brand: z.string({
+        required_error: "Brand is required",
+        invalid_type_error: "Brand must be string",
+      }),
+      model: z.string({
+        required_error: "Model is required",
+        invalid_type_error: "Model is required",
+      }),
+      type: z.string({
+        required_error: "Type is required",
+        invalid_type_error: "Type must be string",
+      }),
+      category: z.string({
+        required_error: "Category is required",
+        invalid_type_error: "Category must be string",
+      }),
+      year: z.string({
+        required_error: "Year is required",
+        invalid_type_error: "Year must be string",
+      }),
       color: z
         .string({
-          required_error: "color is required",
-          invalid_type_error: "color must be string",
+          required_error: "Color is required",
+          invalid_type_error: "Color must be string",
         })
-        .min(1, "color must be more than 1 character"),
-      isElectric: z.boolean({
-        required_error: "isElectric is required",
-        invalid_type_error: "isElectric must be boolean",
+        .min(1, "Color must be more than 1 character"),
+      seatCapacity: z.number({
+        required_error: "Seat capacity is required",
+        invalid_type_error: "Seat capacity must be number",
       }),
+      mileage: z.number({
+        required_error: "Mileage is required",
+        invalid_type_error: "Mileage must be number",
+      }),
+      mileageUnit: z
+        .enum([...carMileageUnit] as [string, ...string[]], {
+          required_error: "Mileage unit is required",
+          invalid_type_error: "Mileage unit must be string",
+        })
+        .optional(),
+      isElectric: z.boolean({
+        required_error: "Is Electric is required",
+        invalid_type_error: "Is Electric must be boolean",
+      }),
+      galleryImages: z
+        .array(
+          z.object({
+            url: z.string({ required_error: "Url is required" }),
+          }),
+        )
+        .optional(),
       features: z
         .array(
           z
             .string({
-              required_error: "feature is required",
-              invalid_type_error: "feature must be string",
+              required_error: "Feature is required",
+              invalid_type_error: "Feature must be string",
             })
-            .min(1, "feature must be more than 1 character")
+            .min(1, "Feature must be more than 1 character")
             .trim(),
         )
-        .min(1, { message: "features is required" }),
+        .min(1, { message: "Features is required" }),
       pricePerHour: z
         .number({
-          required_error: "pricePerHour is required",
-          invalid_type_error: "pricePerHour must be number",
+          required_error: "Price per hour is required",
+          invalid_type_error: "Price per hour must be number",
         })
-        .positive({ message: "pricePerHour must be a positive number" }),
+        .positive({ message: "Price per hour must be a positive number" }),
+      transmission: z.enum([...carTransMission] as [string, ...string[]], {
+        required_error: "Transmission is required",
+        invalid_type_error: "Transmission must be string",
+      }),
     })
     .strict(),
 });
@@ -54,49 +106,123 @@ const update = z.object({
     .object({
       name: z
         .string({
-          required_error: "name is required",
-          invalid_type_error: "name must be string",
+          required_error: "Name is required",
+          invalid_type_error: "Name must be string",
         })
-        .min(1, "name must be more than 1 character")
+        .min(1, "Name must be more than 1 character")
         .optional(),
       description: z
         .string({
-          required_error: "description is required",
-          invalid_type_error: "description must be string",
+          required_error: "Description is required",
+          invalid_type_error: "Description must be string",
         })
-        .min(20, "description must be more than 20 character")
+        .min(20, "Description must be more than 20 character")
+        .optional(),
+      image: z
+        .string({
+          required_error: "Image is required",
+          invalid_type_error: "Image must be string",
+        })
+        .url("Provide a valid url")
+        .optional(),
+      brand: z
+        .string({
+          required_error: "Brand is required",
+          invalid_type_error: "Brand must be string",
+        })
+        .optional(),
+      model: z
+        .string({
+          required_error: "Model is required",
+          invalid_type_error: "Model is required",
+        })
+        .optional(),
+      type: z
+        .string({
+          required_error: "Type is required",
+          invalid_type_error: "Type must be string",
+        })
+        .optional(),
+      category: z
+        .string({
+          required_error: "Category is required",
+          invalid_type_error: "Category must be string",
+        })
+        .optional(),
+      year: z
+        .string({
+          required_error: "Year is required",
+          invalid_type_error: "Year must be string",
+        })
         .optional(),
       color: z
         .string({
-          required_error: "color is required",
-          invalid_type_error: "color must be string",
+          required_error: "Color is required",
+          invalid_type_error: "Color must be string",
         })
-        .min(1, "color must be more than 1 character")
+        .min(1, "Color must be more than 1 character")
+        .optional(),
+      seatCapacity: z
+        .string({
+          required_error: "Seat capacity is required",
+          invalid_type_error: "Seat capacity must be string",
+        })
+        .optional(),
+      mileage: z
+        .string({
+          required_error: "Mileage is required",
+          invalid_type_error: "Mileage must be string",
+        })
+        .optional(),
+      mileageUnit: z
+        .enum([...carMileageUnit] as [string, ...string[]], {
+          required_error: "Mileage unit is required",
+          invalid_type_error: "Mileage unit must be string",
+        })
         .optional(),
       isElectric: z
         .boolean({
-          required_error: "isElectric is required",
-          invalid_type_error: "isElectric must be boolean",
+          required_error: "Is Electric is required",
+          invalid_type_error: "Is Electric must be boolean",
         })
+        .optional(),
+      galleryImages: z
+        .array(
+          z.object({
+            url: z.string({ required_error: "Url is required" }),
+          }),
+        )
         .optional(),
       features: z
         .array(
           z
             .string({
-              required_error: "feature is required",
-              invalid_type_error: "feature must be string",
+              required_error: "Feature is required",
+              invalid_type_error: "Feature must be string",
             })
-            .min(1, "feature must be more than 1 character")
+            .min(1, "Feature must be more than 1 character")
             .trim(),
         )
-        .min(1, { message: "features is required" })
+        .min(1, { message: "Features is required" })
         .optional(),
       pricePerHour: z
         .number({
-          required_error: "pricePerHour is required",
-          invalid_type_error: "pricePerHour must be number",
+          required_error: "Price per hour is required",
+          invalid_type_error: "Price per hour must be number",
         })
-        .positive({ message: "pricePerHour must be a positive number" })
+        .positive({ message: "Price per hour must be a positive number" })
+        .optional(),
+      transmission: z
+        .enum([...carTransMission] as [string, ...string[]], {
+          required_error: "Transmission is required",
+          invalid_type_error: "Transmission must be string",
+        })
+        .optional(),
+      status: z
+        .enum([...carStatus] as [string, ...string[]], {
+          required_error: "Status is required",
+          invalid_type_error: "Status must be string",
+        })
         .optional(),
     })
     .strict(),

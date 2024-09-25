@@ -1,5 +1,5 @@
 {
-  "name": "l2-assignment-3",
+  "name": "rentgo-api",
   "version": "1.0.0",
   "description": "Car Rental Reservation System",
   "main": "./dist/server.js",
@@ -57,7 +57,6 @@
     "http-status": "^1.7.4",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.3.5",
-    "mongoose-dynamic-querybuilder": "^1.0.8",
     "morgan": "^1.10.0",
     "zod": "^3.23.8"
   }

@@ -9,10 +9,12 @@ const router: Router = Router();
 router
   .route("/")
   .post(
+    // create a new car (only admin)
     auth(USER_ROLE.admin),
     validateRequest(carValidationSchema.create),
     carController.create,
   )
+  // get all cars
   .get(carController.getAll);
 
 router.put(
