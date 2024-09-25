@@ -45,7 +45,7 @@ const getAllBookings = catchAsync(async (req, res) => {
   });
 });
 
-// get user's booking
+// get logged in user's booking
 const getUserBookings = catchAsync(async (req, res) => {
   const newQuery = { ...req.query };
 
