@@ -1,6 +1,6 @@
 import httpStatus from "http-status";
 import mongoose from "mongoose";
-import QueryBuilder from "mongoose-dynamic-querybuilder";
+import { QueryBuilder } from "../../builder";
 import { AppError } from "../../errors";
 import Booking from "../booking/booking.model";
 import { searchableFields } from "./car.constant";
@@ -22,7 +22,10 @@ const getAll = async (query: Record<string, unknown>) => {
     .fields()
     .search(searchableFields);
 
-  return carQuery.modelQuery;
+  const result = await carQuery.modelQuery;
+  const meta = await carQuery.countTotal();
+
+  return { result, meta };
 };
 
 // find car by property

@@ -1,31 +1,38 @@
 import httpStatus from "http-status";
 import { JwtPayload } from "jsonwebtoken";
-import QueryBuilder from "mongoose-dynamic-querybuilder";
+import { QueryBuilder } from "../../builder";
 import { AppError } from "../../errors";
 import Car from "../car/car.model";
 import { carService } from "../car/car.service";
 import { userService } from "../user/user.service";
+import { TBooking } from "./booking.interface";
 import Booking from "./booking.model";
 
 // book a car
-const book = async (userData: JwtPayload, payload: Record<string, string>) => {
+const newBooking = async (
+  userData: JwtPayload,
+  payload: Pick<TBooking, "car" | "bookingDate" | "startTime">,
+) => {
   const user = await userService.findByProperty("email", userData.email);
   if (!user) {
     throw new AppError("User not found", httpStatus.NOT_FOUND);
   }
 
-  const car = await carService.findByProperty("_id", payload.carId);
+  const car = await carService.findByProperty("_id", payload.car.toString());
   if (!car) {
     throw new AppError("Car not found", httpStatus.NOT_FOUND);
   }
   if (car.status !== "available") {
-    throw new AppError("Car is not available", httpStatus.BAD_REQUEST);
+    throw new AppError(
+      "Car is not available right now",
+      httpStatus.BAD_REQUEST,
+    );
   }
 
   const modifiedObj = {
     ...payload,
     user: user?._id,
-    car: car._id,
+    car: car?._id,
   };
 
   const session = await Booking.startSession();
@@ -34,7 +41,7 @@ const book = async (userData: JwtPayload, payload: Record<string, string>) => {
     session.startTransaction();
 
     const updatedCar = await Car.findByIdAndUpdate(
-      payload.carId,
+      payload.car.toString(),
       {
         status: "unavailable",
       },
@@ -69,7 +76,7 @@ const book = async (userData: JwtPayload, payload: Record<string, string>) => {
 };
 
 // get all bookings
-const getAllBookings = (query: Record<string, unknown>) => {
+const getAllBookings = async (query: Record<string, unknown>) => {
   const bookingQuery = new QueryBuilder(
     Booking.find({}).populate("user").populate("car"),
     query,
@@ -79,7 +86,10 @@ const getAllBookings = (query: Record<string, unknown>) => {
     .paginate()
     .fields();
 
-  return bookingQuery.modelQuery;
+  const result = await bookingQuery.modelQuery;
+  const meta = await bookingQuery.countTotal();
+
+  return { result, meta };
 };
 
 // get user's bookings
@@ -101,11 +111,14 @@ const getUserBookings = async (
     .paginate()
     .fields();
 
-  return userBookingQuery.modelQuery;
+  const result = await userBookingQuery.modelQuery;
+  const meta = await userBookingQuery.countTotal();
+
+  return { result, meta };
 };
 
 export const bookingService = {
-  book,
+  newBooking,
   getAllBookings,
   getUserBookings,
 };

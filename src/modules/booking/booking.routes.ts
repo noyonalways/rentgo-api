@@ -10,8 +10,8 @@ router
   .route("/")
   .post(
     auth(USER_ROLE.user),
-    validateRequest(bookingValidationSchema.book),
-    bookingController.book,
+    validateRequest(bookingValidationSchema.newBooking),
+    bookingController.newBooking,
   )
   .get(auth(USER_ROLE.admin), bookingController.getAllBookings);
 
