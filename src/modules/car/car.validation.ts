@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { z } from "zod";
 import { validateTime } from "../../utils";
-import { carMileageUnit, carStatus, carTransMission } from "./car.constant";
+import { CarMileageUnit, CarStatus, CarTransMission } from "./car.constant";
 import { startAndEndTimeValidation } from "./car.utils";
 
 const create = z.object({
@@ -60,7 +60,7 @@ const create = z.object({
         invalid_type_error: "Mileage must be number",
       }),
       mileageUnit: z
-        .enum([...carMileageUnit] as [string, ...string[]], {
+        .enum([...CarMileageUnit] as [string, ...string[]], {
           required_error: "Mileage unit is required",
           invalid_type_error: "Mileage unit must be string",
         })
@@ -93,7 +93,7 @@ const create = z.object({
           invalid_type_error: "Price per hour must be number",
         })
         .positive({ message: "Price per hour must be a positive number" }),
-      transmission: z.enum([...carTransMission] as [string, ...string[]], {
+      transmission: z.enum([...CarTransMission] as [string, ...string[]], {
         required_error: "Transmission is required",
         invalid_type_error: "Transmission must be string",
       }),
@@ -175,7 +175,7 @@ const update = z.object({
         })
         .optional(),
       mileageUnit: z
-        .enum([...carMileageUnit] as [string, ...string[]], {
+        .enum([...CarMileageUnit] as [string, ...string[]], {
           required_error: "Mileage unit is required",
           invalid_type_error: "Mileage unit must be string",
         })
@@ -213,13 +213,13 @@ const update = z.object({
         .positive({ message: "Price per hour must be a positive number" })
         .optional(),
       transmission: z
-        .enum([...carTransMission] as [string, ...string[]], {
+        .enum([...CarTransMission] as [string, ...string[]], {
           required_error: "Transmission is required",
           invalid_type_error: "Transmission must be string",
         })
         .optional(),
       status: z
-        .enum([...carStatus] as [string, ...string[]], {
+        .enum([...CarStatus] as [string, ...string[]], {
           required_error: "Status is required",
           invalid_type_error: "Status must be string",
         })

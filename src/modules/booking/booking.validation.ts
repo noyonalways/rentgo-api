@@ -1,41 +1,66 @@
 import mongoose from "mongoose";
 import { z } from "zod";
-import validateTime from "../../utils/validateTIme";
+import {
+  validateBookingDate,
+  validateStartTimeAndBookingDate,
+  validateTime,
+} from "./booking.utils";
 
-// const validateDate = (date: string) => {
-//   const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-//   return dateRegex.test(date); //yyyy-mm-dd
-// };
-
-const book = z.object({
+const newBooking = z.object({
   body: z
     .object({
-      carId: z
+      bookingDate: z
         .string({
-          required_error: "carId is required",
-          invalid_type_error: "carId id must be string",
+          required_error: "Booking date is required",
+          invalid_type_error: "Booking date must be string",
         })
-        .refine((val) => mongoose.Types.ObjectId.isValid(val), {
-          message: "invalid car id",
+        .refine(validateBookingDate, {
+          message: "Booking date must be today or a future date",
         }),
-      date: z
-        .string({
-          required_error: "date is required",
-          invalid_type_error: "date must be string",
-        })
-        .date("Invalid date format, expected 'YYYY-MM-DD' format"),
       startTime: z
         .string({
-          required_error: "start time is required",
-          invalid_type_error: "start time must be string",
+          required_error: "Start time is required",
+          invalid_type_error: "Start time must be string",
         })
+        // First refine to check if the time format is valid
         .refine(validateTime, {
-          message: "Invalid time format, expected 'HH:MM' in 24 hours format",
+          message: "Invalid time format, expected 'HH:MM' in 24-hour format",
         }),
+      car: z
+        .string({
+          required_error: "Car id is required",
+          invalid_type_error: "Car id must be string",
+        })
+        .refine((val) => mongoose.Types.ObjectId.isValid(val), {
+          message: "Invalid car id",
+        }),
+      bookingAddress: z
+        .string({
+          required_error: "Booking address is required",
+          invalid_type_error: "Booking address must be string",
+        })
+        .min(1, "Booking address must be greater than 1 character"),
+      nidOrPassport: z
+        .string({
+          required_error: "NID or Passport number is required",
+          invalid_type_error: "NID or Passport number must be string",
+        })
+        .min(5, "NID or Passport number must be greater than 5 characters"),
+      drivingLicense: z
+        .string({
+          required_error: "Driving license number is required",
+          invalid_type_error: "Driving license number must be string",
+        })
+        .min(5, "Driving license number must be greater than 5 characters"),
     })
-    .strict(),
+    .strict()
+    .refine(validateStartTimeAndBookingDate, {
+      message:
+        "Invalid start time. For today's booking, the time must be at least the next available hour.",
+      path: ["body", "startTime"],
+    }),
 });
 
 export const bookingValidationSchema = {
-  book,
+  newBooking,
 };

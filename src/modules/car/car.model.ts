@@ -1,5 +1,5 @@
-import { Schema, model } from "mongoose";
-import { carMileageUnit, carStatus, carTransMission } from "./car.constant";
+import { model, Schema } from "mongoose";
+import { CarMileageUnit, CarStatus, CarTransMission } from "./car.constant";
 import { TCar, TGalleryImage } from "./car.interface";
 
 const galleryImageSchema = new Schema<TGalleryImage>({
@@ -63,8 +63,8 @@ const carSchema = new Schema<TCar>(
     mileageUnit: {
       type: String,
       enum: {
-        values: carMileageUnit,
-        message: "{VALUE} is not a valid car status",
+        values: CarMileageUnit,
+        message: "{VALUE} is not a valid mileage unit",
       },
       default: "kilometers",
     },
@@ -87,15 +87,15 @@ const carSchema = new Schema<TCar>(
     transmission: {
       type: String,
       enum: {
-        values: carTransMission,
-        message: "{VALUE} is not a valid car status",
+        values: CarTransMission,
+        message: "{VALUE} is not a valid transmission",
       },
       required: [true, "Transmission is required"],
     },
     status: {
       type: String,
       enum: {
-        values: carStatus,
+        values: CarStatus,
         message: "{VALUE} is not a valid car status",
       },
       default: "available",

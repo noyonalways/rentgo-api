@@ -1,11 +1,24 @@
 import { Schema, model } from "mongoose";
+import { BookingPaymentStatus, BookingStatus } from "./booking.constant";
 import { TBooking } from "./booking.interface";
 
 const bookingSchema = new Schema<TBooking>(
   {
-    date: {
+    bookingDate: {
+      type: Date,
+      required: [true, "Booking date is required"],
+    },
+    returnDate: {
+      type: Date,
+      default: null,
+    },
+    startTime: {
       type: String,
-      required: [true, "date is required"],
+      required: [true, "startTime is required"],
+    },
+    endTime: {
+      type: String,
+      default: null,
     },
     user: {
       type: Schema.Types.ObjectId,
@@ -17,13 +30,37 @@ const bookingSchema = new Schema<TBooking>(
       ref: "Car",
       required: [true, "car is required"],
     },
-    startTime: {
+    bookingAddress: {
       type: String,
-      required: [true, "startTime is required"],
+      required: [true, "Booking address is required"],
     },
-    endTime: {
+    nidOrPassport: {
       type: String,
-      default: null,
+      required: [true, "Nid or Passport number is required"],
+    },
+    drivingLicense: {
+      type: String,
+      required: [true, "Driving license number is required"],
+    },
+    status: {
+      type: String,
+      enum: {
+        values: BookingStatus,
+        message: "{VALUE} is not a valid booking status",
+      },
+      default: "pending",
+    },
+    paymentStatus: {
+      type: String,
+      enum: {
+        values: BookingPaymentStatus,
+        message: "{VALUE} is not a valid booking payment status",
+      },
+      default: "pending",
+    },
+    totalHour: {
+      type: Number,
+      default: 0,
     },
     totalCost: {
       type: Number,

@@ -1,7 +1,7 @@
 import { Types } from "mongoose";
 
 export type TBookingStatus = "pending" | "approved" | "cancelled" | "completed";
-export type TPaymentStatus = "pending" | "paid";
+export type TBookingPaymentStatus = "pending" | "paid";
 
 export type TBooking = {
   bookingDate: Date;
@@ -14,7 +14,7 @@ export type TBooking = {
   nidOrPassport: string;
   drivingLicense: string;
   status: TBookingStatus;
-  paymentStatus: TPaymentStatus;
+  paymentStatus: TBookingPaymentStatus;
   totalCost: number;
   totalHour: number;
 };
