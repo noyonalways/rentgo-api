@@ -12,7 +12,7 @@ export const startAndEndTimeValidation = async (
     throw new AppError("Booking Data not found", httpStatus.NOT_FOUND);
   }
 
-  if (existingBooking.endTime) {
+  if (existingBooking.endTime && existingBooking.returnDate) {
     throw new AppError("Car is already returned", httpStatus.BAD_REQUEST);
   }
 

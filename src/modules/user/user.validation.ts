@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { userStatus } from "./user.constant";
+import { UserStatus } from "./user.constant";
 
 const updateProfile = z.object({
   body: z
@@ -48,7 +48,7 @@ const updateProfile = z.object({
 const changeStatus = z.object({
   body: z
     .object({
-      status: z.enum([...userStatus] as [string, ...string[]], {
+      status: z.enum([...UserStatus] as [string, ...string[]], {
         required_error: "User status is required",
         invalid_type_error: "User status must be string",
       }),

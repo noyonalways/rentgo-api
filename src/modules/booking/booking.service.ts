@@ -5,6 +5,7 @@ import { AppError } from "../../errors";
 import Car from "../car/car.model";
 import { carService } from "../car/car.service";
 import { userService } from "../user/user.service";
+import { BOOKING_STATUS } from "./booking.constant";
 import { TBooking } from "./booking.interface";
 import Booking from "./booking.model";
 
@@ -117,8 +118,46 @@ const getUserBookings = async (
   return { result, meta };
 };
 
+// approved booking
+const approvedBooking = async (id: string) => {
+  const updatedBooking = await Booking.findByIdAndUpdate(
+    id,
+    { status: BOOKING_STATUS.APPROVED },
+    {
+      new: true,
+      runValidators: true,
+    },
+  );
+
+  if (!updatedBooking) {
+    throw new AppError("Booking not found", httpStatus.NOT_FOUND);
+  }
+
+  return updatedBooking;
+};
+
+// cancelled booking
+const cancelledBooking = async (id: string) => {
+  const updatedBooking = await Booking.findByIdAndUpdate(
+    id,
+    { status: BOOKING_STATUS.CANCELLED },
+    {
+      new: true,
+      runValidators: true,
+    },
+  );
+
+  if (!updatedBooking) {
+    throw new AppError("Booking not found", httpStatus.NOT_FOUND);
+  }
+
+  return updatedBooking;
+};
+
 export const bookingService = {
   newBooking,
   getAllBookings,
   getUserBookings,
+  approvedBooking,
+  cancelledBooking,
 };

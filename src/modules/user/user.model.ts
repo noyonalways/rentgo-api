@@ -1,10 +1,10 @@
 import bcrypt from "bcrypt";
 import httpStatus from "http-status";
 import jwt from "jsonwebtoken";
-import mongoose, { Schema, model } from "mongoose";
+import mongoose, { model, Schema } from "mongoose";
 import config from "../../config";
 import AppError from "../../errors/AppError";
-import { userRoles, userStatus } from "./user.constant";
+import { UserRoles, UserStatus } from "./user.constant";
 import { TUser, UserModel } from "./user.interface";
 
 const userSchema = new Schema<TUser, UserModel>(
@@ -41,7 +41,7 @@ const userSchema = new Schema<TUser, UserModel>(
     role: {
       type: String,
       enum: {
-        values: userRoles,
+        values: UserRoles,
         message: "{VALUE} is not a valid user role",
       },
       default: "user",
@@ -50,7 +50,7 @@ const userSchema = new Schema<TUser, UserModel>(
     status: {
       type: String,
       enum: {
-        values: userStatus,
+        values: UserStatus,
         message: "{VALUE} is not a valid user status",
       },
       default: "active",

@@ -6,7 +6,7 @@ import Booking from "../booking/booking.model";
 import { searchableFields } from "./car.constant";
 import { TCar } from "./car.interface";
 import Car from "./car.model";
-import { calculateTotalTime } from "./car.utils";
+// import { calculateTotalTime } from "./car.utils";
 
 // create a new car
 const create = (payload: TCar) => {
@@ -89,12 +89,19 @@ const deleteSingle = async (id: string) => {
   return deletedCar;
 };
 
-// return the car
+// Helper function to calculate the total hours between two dates
+const calculateTotalTime = (startDateTime: Date, endDateTime: Date) => {
+  const diffInMilliseconds = endDateTime.getTime() - startDateTime.getTime();
+  const diffInHours = diffInMilliseconds / (1000 * 60 * 60); // Convert milliseconds to hours
+  return Math.ceil(diffInHours); // Round up to the next full hour
+};
+
 const returnTheCar = async (payload: {
   bookingId: string;
+  returnDate: string;
   endTime: string;
 }) => {
-  const { bookingId, endTime } = payload;
+  const { bookingId, endTime, returnDate } = payload;
 
   // find the booking
   const existingBooking = await Booking.findById(bookingId);
@@ -108,15 +115,25 @@ const returnTheCar = async (payload: {
     throw new AppError("Car not found", httpStatus.NOT_FOUND);
   }
 
-  // calculate total time and totalCost
-  const totalTime = calculateTotalTime(existingBooking.startTime, endTime);
-  const totalCost = car?.pricePerHour * totalTime;
+  // Combine returnDate and endTime into a single Date object for return
+  const returnDateTime = new Date(`${returnDate}T${endTime}:00`);
+
+  // Combine bookingDate and startTime into a single Date object for start
+  const bookingDateTime = new Date(
+    `${existingBooking.bookingDate.toISOString().split("T")[0]}T${existingBooking.startTime}:00`,
+  );
+
+  // Calculate total time in hours (rounded up)
+  const totalTime = calculateTotalTime(bookingDateTime, returnDateTime);
+
+  // Calculate the total cost
+  const totalCost = car.pricePerHour * totalTime;
 
   const session = await Booking.startSession();
   try {
     session.startTransaction();
 
-    // transaction-1
+    // transaction-1: Update the car status to "available"
     await Car.findByIdAndUpdate(
       car._id,
       {
@@ -128,12 +145,15 @@ const returnTheCar = async (payload: {
       },
     );
 
-    // transaction-2
+    // transaction-2: Update the booking with totalCost and endTime
     const updatedBooking = await Booking.findByIdAndUpdate(
       existingBooking._id,
       {
         totalCost,
+        totalHour: totalTime, // Save total hours
         endTime,
+        returnDate, // Save the return date as well
+        status: "completed",
       },
       {
         session,

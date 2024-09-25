@@ -21,4 +21,18 @@ router.get(
   bookingController.getUserBookings,
 );
 
+// approved booking
+router.patch(
+  "/:id/approved",
+  auth(USER_ROLE.admin),
+  bookingController.approvedBooking,
+);
+
+// cancelled booking
+router.patch(
+  "/:id/cancelled",
+  auth(USER_ROLE.admin),
+  bookingController.cancelledBooking,
+);
+
 export default router;
