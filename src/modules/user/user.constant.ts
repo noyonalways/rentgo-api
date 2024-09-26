@@ -1,7 +1,7 @@
 import { TUserRoles, TUserStatus } from "./user.interface";
 
-export const userRoles: TUserRoles[] = ["admin", "user"];
-export const userStatus: TUserStatus[] = ["active", "blocked"];
+export const UserRoles: TUserRoles[] = ["admin", "user"];
+export const UserStatus: TUserStatus[] = ["active", "blocked"];
 
 export const USER_ROLE = {
   admin: "admin",

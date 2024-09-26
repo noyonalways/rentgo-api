@@ -10,4 +10,13 @@ export const BookingStatus: TBookingStatus[] = [
 export const BookingPaymentStatus: TBookingPaymentStatus[] = [
   "pending",
   "paid",
+  "failed",
+  "cancelled",
 ];
+
+export const BOOKING_STATUS = {
+  PENDING: "pending",
+  APPROVED: "approved",
+  CANCELLED: "cancelled",
+  COMPLETED: "completed",
+} as const;

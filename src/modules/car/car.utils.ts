@@ -12,17 +12,11 @@ export const startAndEndTimeValidation = async (
     throw new AppError("Booking Data not found", httpStatus.NOT_FOUND);
   }
 
-  if (existingBooking.endTime) {
+  if (existingBooking.endTime && existingBooking.returnDate) {
     throw new AppError("Car is already returned", httpStatus.BAD_REQUEST);
   }
 
   const start = new Date(`1970-01-01T${existingBooking?.startTime}:00`);
   const end = new Date(`1970-01-01T${body.endTime}:00`);
   return end > start;
-};
-
-export const calculateTotalTime = (startTime: string, endTime: string) => {
-  const start = new Date(`1970-01-01T${startTime}:00`);
-  const end = new Date(`1970-01-01T${endTime}:00`);
-  return (Number(end) - Number(start)) / (3600 * 1000);
 };

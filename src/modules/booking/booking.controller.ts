@@ -1,6 +1,5 @@
 import httpStatus from "http-status";
-import catchAsync from "../../utils/catchAsync";
-import sendResponse from "../../utils/sendResponse";
+import { catchAsync, sendResponse } from "../../utils";
 import { bookingService } from "./booking.service";
 
 // book a car
@@ -10,7 +9,8 @@ const newBooking = catchAsync(async (req, res) => {
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.CREATED,
-    message: "Car booked successfully",
+    message:
+      "Car booking info submitted successfully, please wait for the approval",
     data: result,
   });
 });
@@ -45,7 +45,7 @@ const getAllBookings = catchAsync(async (req, res) => {
   });
 });
 
-// get logged in user's booking
+// get logged in user's bookings
 const getUserBookings = catchAsync(async (req, res) => {
   const newQuery = { ...req.query };
 
@@ -78,8 +78,36 @@ const getUserBookings = catchAsync(async (req, res) => {
   });
 });
 
+// approved booking
+const approvedBooking = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await bookingService.approvedBooking(id);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Booking is approved",
+    data: result,
+  });
+});
+
+// cancelled booking
+const cancelledBooking = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await bookingService.cancelledBooking(id);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Booking is cancelled",
+    data: result,
+  });
+});
+
 export const bookingController = {
   newBooking,
   getAllBookings,
   getUserBookings,
+  approvedBooking,
+  cancelledBooking,
 };

@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 import { z } from "zod";
 import { validateTime } from "../../utils";
 import { CarMileageUnit, CarStatus, CarTransMission } from "./car.constant";
-import { startAndEndTimeValidation } from "./car.utils";
 
 const create = z.object({
   body: z
@@ -233,25 +232,28 @@ const returnTheCar = z.object({
     .object({
       bookingId: z
         .string({
-          required_error: "bookingId is required",
-          invalid_type_error: "bookingId must be string",
+          required_error: "Booking Id is required",
+          invalid_type_error: "Booking Id must be string",
         })
         .refine((val) => mongoose.Types.ObjectId.isValid(val), {
-          message: "invalid bookingId",
+          message: "Invalid Booking Id",
         }),
+      returnDate: z
+        .string({
+          required_error: "Return date is required",
+          invalid_type_error: "Return date must be string",
+        })
+        .date("Invalid date"),
       endTime: z
         .string({
-          required_error: "end time is required",
-          invalid_type_error: "end time must be string",
+          required_error: "End time is required",
+          invalid_type_error: "End time must be string",
         })
         .refine(validateTime, {
           message: "Invalid time format, expected 'HH:MM' in 24 hours format",
         }),
     })
-    .strict()
-    .refine(startAndEndTimeValidation, {
-      message: "endTime should be after startTIme",
-    }),
+    .strict(),
 });
 
 export const carValidationSchema = {
