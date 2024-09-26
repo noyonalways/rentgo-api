@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 import { z } from "zod";
 import { validateTime } from "../../utils";
 import { CarMileageUnit, CarStatus, CarTransMission } from "./car.constant";
-import { startAndEndTimeValidation } from "./car.utils";
 
 const create = z.object({
   body: z
@@ -254,11 +253,7 @@ const returnTheCar = z.object({
           message: "Invalid time format, expected 'HH:MM' in 24 hours format",
         }),
     })
-    .strict()
-    .refine(startAndEndTimeValidation, {
-      message: "End time should be after start time",
-      path: ["body", "endTime"],
-    }),
+    .strict(),
 });
 
 export const carValidationSchema = {

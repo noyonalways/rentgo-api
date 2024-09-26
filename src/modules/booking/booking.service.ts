@@ -93,7 +93,7 @@ const getAllBookings = async (query: Record<string, unknown>) => {
   return { result, meta };
 };
 
-// get user's bookings
+// get logged in user's bookings
 const getUserBookings = async (
   userData: JwtPayload,
   query: Record<string, unknown>,

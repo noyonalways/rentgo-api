@@ -9,7 +9,8 @@ const newBooking = catchAsync(async (req, res) => {
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.CREATED,
-    message: "Car booked successfully",
+    message:
+      "Car booking info submitted successfully, please wait for the approval",
     data: result,
   });
 });
@@ -44,7 +45,7 @@ const getAllBookings = catchAsync(async (req, res) => {
   });
 });
 
-// get logged in user's booking
+// get logged in user's bookings
 const getUserBookings = catchAsync(async (req, res) => {
   const newQuery = { ...req.query };
 

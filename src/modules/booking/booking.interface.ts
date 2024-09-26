@@ -15,6 +15,7 @@ export type TBooking = {
   drivingLicense: string;
   status: TBookingStatus;
   paymentStatus: TBookingPaymentStatus;
+  transactionId: string;
   totalCost: number;
-  totalHour: number;
+  totalHours: number;
 };

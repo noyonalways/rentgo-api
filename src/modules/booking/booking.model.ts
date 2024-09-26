@@ -58,7 +58,10 @@ const bookingSchema = new Schema<TBooking>(
       },
       default: "pending",
     },
-    totalHour: {
+    transactionId: {
+      type: String,
+    },
+    totalHours: {
       type: Number,
       default: 0,
     },
