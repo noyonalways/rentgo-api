@@ -51,11 +51,10 @@ const singIn = async (payload: TUserSignIn) => {
 
 // get signed in user
 const getMe = async (payload: JwtPayload) => {
-  const user = await User.isUserExists("email", payload.email);
+  const user = await User.findOne({ email: payload.email });
   if (!user) {
     throw new AppError("User not found", httpStatus.NOT_FOUND);
   }
-  user.password = "";
   return user;
 };
 

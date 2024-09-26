@@ -1,7 +1,7 @@
 import { Types } from "mongoose";
 
-export type TPaymentStatus = "pending" | "paid" | "cancelled";
-export type TPaymentMethod = "amarpay" | "cash";
+export type TPaymentStatus = "pending" | "paid" | "failed" | "cancelled";
+export type TPaymentMethod = "aamarpay" | "cash";
 export type TPaymentCurrency = "BDT" | "USD";
 
 export type TPayment = {

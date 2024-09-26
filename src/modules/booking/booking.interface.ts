@@ -1,7 +1,7 @@
 import { Types } from "mongoose";
 
 export type TBookingStatus = "pending" | "approved" | "cancelled" | "completed";
-export type TBookingPaymentStatus = "pending" | "paid";
+export type TBookingPaymentStatus = "pending" | "paid" | "failed" | "cancelled";
 
 export type TBooking = {
   bookingDate: Date;
