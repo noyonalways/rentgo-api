@@ -8,6 +8,11 @@ import { TUserSignIn } from "./auth.interface";
 
 // sign up user
 const singUp = async (payload: TUser) => {
+  const user = await User.findOne({ email: payload.email });
+  if (user) {
+    throw new AppError("Email already exists", httpStatus.CONFLICT);
+  }
+
   return User.create(payload);
 };
 

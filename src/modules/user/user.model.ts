@@ -20,13 +20,6 @@ const userSchema = new Schema<TUser, UserModel>(
       trim: true,
       unique: true,
       required: [true, "Email is required"],
-      validate: {
-        validator: async function (email: string): Promise<boolean> {
-          const user = await User.findOne({ email });
-          return !user;
-        },
-        message: "Email already exists",
-      },
     },
     phone: {
       type: String,

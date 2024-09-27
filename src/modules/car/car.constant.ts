@@ -12,4 +12,5 @@ export const searchableFields = [
   "brand",
   "type",
   "category",
+  "color",
 ];

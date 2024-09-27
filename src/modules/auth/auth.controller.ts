@@ -20,6 +20,7 @@ const signIn = catchAsync(async (req, res) => {
   res.cookie("refreshToken", refreshToken, {
     secure: config.NODE_ENV === "production",
     httpOnly: true,
+    maxAge: 1000 * 60 * 60 * 24 * 60 * 365,
   });
 
   sendResponse(res, {

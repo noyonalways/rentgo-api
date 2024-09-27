@@ -12,7 +12,18 @@ const app: Application = express();
 // application middlewares
 app.use(morgan(config.NODE_ENV === "development" ? "dev" : "tiny"));
 app.use(helmet());
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "http://192.168.0.116:5173",
+      "https://rentgo-web.vercel.app",
+      "https://rentgo.noyonrahman.xyz",
+    ],
+    credentials: true,
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  }),
+);
 app.use(express.json());
 app.use(cookieParser());
 
