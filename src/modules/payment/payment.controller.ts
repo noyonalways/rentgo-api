@@ -63,9 +63,25 @@ const paymentCancelled = catchAsync(async (req, res) => {
     );
 });
 
+const userPayments = catchAsync(async (req, res) => {
+  const { meta, result } = await paymentService.userPayments(
+    req.user,
+    req.query,
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "User payments retrieved successfully",
+    meta,
+    data: result,
+  });
+});
+
 export const paymentController = {
   payPayment,
   paymentConfirmation,
   paymentFailed,
   paymentCancelled,
+  userPayments,
 };

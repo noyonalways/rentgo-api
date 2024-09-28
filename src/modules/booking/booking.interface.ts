@@ -11,6 +11,7 @@ export type TBooking = {
   user: Types.ObjectId;
   car: Types.ObjectId;
   bookingAddress: string;
+  phone: string;
   nidOrPassport: string;
   drivingLicense: string;
   status: TBookingStatus;

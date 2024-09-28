@@ -12,6 +12,13 @@ router.post(
   paymentController.payPayment,
 );
 
+// logged in user payment history
+router.get(
+  "/my-payments",
+  auth(USER_ROLE.user),
+  paymentController.userPayments,
+);
+
 // check the payment confirmation
 router.post("/confirmation", paymentController.paymentConfirmation);
 

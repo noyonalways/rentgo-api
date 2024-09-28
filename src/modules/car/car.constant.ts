@@ -14,3 +14,8 @@ export const searchableFields = [
   "category",
   "color",
 ];
+
+export const CAR_STATUS = {
+  AVAILABLE: "available",
+  UNAVAILABLE: "unavailable",
+} as const;

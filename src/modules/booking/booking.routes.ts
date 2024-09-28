@@ -15,20 +15,43 @@ router
   )
   .get(auth(USER_ROLE.admin), bookingController.getAllBookings);
 
+// get logged in user's bookings
 router.get(
   "/my-bookings",
   auth(USER_ROLE.user),
   bookingController.getUserBookings,
 );
 
-// approved booking
+// get single booking by transaction id
+router.get(
+  "/my-bookings/:transactionId",
+  auth(USER_ROLE.admin, USER_ROLE.user),
+  bookingController.getBookingByTransactionId,
+);
+
+// cancel a booking (logged in user)
+router.delete(
+  "/my-bookings/:id",
+  auth(USER_ROLE.user),
+  bookingController.cancelLoggedInUserBooking,
+);
+
+// update a booking (logged in user)
+router.patch(
+  "/my-bookings/:id",
+  auth(USER_ROLE.user),
+  validateRequest(bookingValidationSchema.updateBooking),
+  bookingController.updateLoggedInUserBooking,
+);
+
+// approved booking for admin
 router.patch(
   "/:id/approved",
   auth(USER_ROLE.admin),
   bookingController.approvedBooking,
 );
 
-// cancelled booking
+// cancelled booking for admin
 router.patch(
   "/:id/cancelled",
   auth(USER_ROLE.admin),

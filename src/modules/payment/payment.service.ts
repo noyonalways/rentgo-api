@@ -1,4 +1,5 @@
 import httpStatus from "http-status";
+import { QueryBuilder } from "../../builder";
 import { AppError } from "../../errors";
 import Booking from "../booking/booking.model";
 import User from "../user/user.model";
@@ -238,9 +239,49 @@ const paymentCancelled = async (transactionId: string) => {
   }
 };
 
+const userPayments = async (
+  user: Record<string, unknown>,
+  query: Record<string, unknown>,
+) => {
+  // Find the current user based on email
+  const currentUser = await User.findOne({ email: user.email });
+  if (!currentUser) {
+    throw new AppError("User not found", httpStatus.NOT_FOUND);
+  }
+
+  // Find the booking for the current user and populate 'user' and 'car' fields
+  const booking = await Booking.findOne({ user: currentUser._id });
+
+  if (!booking) {
+    throw new AppError("No booking found for this user", httpStatus.NOT_FOUND);
+  }
+
+  // Query for payments related to the booking, populate booking with 'user' and 'car'
+  const userPaymentsQuery = new QueryBuilder(
+    Payment.find({ booking: booking._id }).populate({
+      path: "booking",
+      populate: [
+        { path: "user" }, // Populate user inside booking
+        { path: "car" }, // Populate car inside booking
+      ],
+    }),
+    query,
+  )
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const result = await userPaymentsQuery.modelQuery;
+  const meta = await userPaymentsQuery.countTotal();
+
+  return { result, meta };
+};
+
 export const paymentService = {
   payPayment,
   paymentConfirmation,
   paymentFailed,
   paymentCancelled,
+  userPayments,
 };
