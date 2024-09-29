@@ -6,6 +6,8 @@ import { userValidationSchema } from "./user.validation";
 
 const router: Router = Router();
 
+router.get("/", auth(USER_ROLE.admin), userController.allUsers);
+
 router.patch(
   "/:id/change-status",
   auth(USER_ROLE.admin),

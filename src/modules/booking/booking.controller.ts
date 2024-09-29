@@ -27,15 +27,6 @@ const getAllBookings = catchAsync(async (req, res) => {
 
   const { meta, result } = await bookingService.getAllBookings(newQuery);
 
-  if (result.length <= 0) {
-    return sendResponse(res, {
-      success: false,
-      statusCode: httpStatus.NOT_FOUND,
-      message: "No Data found",
-      data: undefined,
-    });
-  }
-
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
