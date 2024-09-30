@@ -28,7 +28,6 @@ const singUp = z.object({
         .string({
           invalid_type_error: "Profile Image must be string",
         })
-        .url({ message: "Provide a valid url" })
         .optional(),
       password: z
         .string({
