@@ -14,14 +14,14 @@
 
 <br />
 <div align="center">
-  <a href="https://github.com/noyonalways/l2-assignment-3">
-    <img src="https://i.ibb.co/c64q254/noyon-logo-dark.png" alt="Logo" width="80" height="80">
+  <a href="https://github.com/noyonalways/rentgo-api">
+    <img src="https://i.ibb.co.com/PjBr32F/car.png" alt="Logo" width="80" height="80">
   </a>
-  <h3 align="center">Car Rental Reservation System</h3>
+  <h3 align="center">RentGo Api</h3>
     <p align="center">
       Reservation System for booking Car's
     <br />
-    <a href="https://car-rental-system-server.vercel.app/">
+    <a href="https://rentgo-api.noyonrahman.xyz">
       <strong>Live Server Link »</strong>
     </a>
     
@@ -33,29 +33,52 @@
 
 ## Overview:
 
-The Car Rental Reservation System is a powerful booking system designed for cars rental purposes. User Authentication, car management and booking functionalities. The system contains roles (admin and user) with role-related access controls which allows for an orderly chain of operations, at the same time being fail-safe.
+The **RentGo** Car Rental Reservation System is a powerful booking system designed for cars rental purposes. User Authentication, car management and booking functionalities. The system contains roles (admin and user) with role-related access controls which allows for an orderly chain of operations, at the same time being fail-safe.
 
 ## Features:
 
 ### Authentication
 
-- Sign Up `/api/auth/signup` - **POST**: Allows new users to register by providing necessary details like name, email, password, phone number, and address.
-- Sign In `/api/auth/signin` - **POST**: Allows registered users to log in using their email and password. Upon successful authentication, a JWT token is issued for subsequent requests and send as response.
+- Sign Up `/api/v1/auth/signup` - **POST**: Allows new users to register by providing necessary details like name, email, password, phone number, and address.
+- Sign In `/api/v1/v1/auth/signin` - **POST**: Allows registered users to log in using their email and password. Upon successful authentication, a JWT token is issued for subsequent requests and send as response.
+- Get Me `/api/v1/me` - **GET**: Get logged in user details
+- Update User Profile `/api/v1/update-profile` - **PATCH**: Update logged in user profile
+- Generate a new access token from refresh token `/api/v1/refresh-token` - **POST**: Generate a new access token from refresh token via cookies
+
+## User Management
+
+- Get all users `/api/v1/users` - **GET**: Get all users (admin only)
+- Block and Unblock a user `/api/v1/users/:userId/change-status` - **PATCH**: Update the user status (admin only)
+- Make User to Admin `/api/v1/users/:userId/make-admin` - **PATCH**: Make a normal user to Admin (admin only)
 
 ### Car Management
 
-- Create a Car `/api/cars` - **POST**: Enables administrators to add new car. Details required include the car's `name`, `description`, `color`, `features`, and `pricePerHour`.
-- Get All Cars `/api/cars` - **GET**: Allows users and administrators to retrieve a list of all available cars. This endpoint provides comprehensive details about each car.
-- Get a Car `/api/cars/:id` - **GET**: Enables users and administrators to view detailed information about a specific car identified by its Id.
-- Update a Car `/api/cars/:id` - **PUT**: Allows administrators to update the details of an existing car, such as its description, features, or status.
-- Delete a Car `/api/cars/:id` - **DELETE**: Performs a soft delete of a car, making it unavailable for bookings without permanently removing it from the database. This operation is restricted to administrators.
+- Create a Car `/api/v1/cars` - **POST**: Enables administrators to add new car. Details required include the car's `name`, `description`, `color`, `features`, and `pricePerHour`.
+- Get All Cars `/api/v1/cars` - **GET**: Allows users and administrators to retrieve a list of all available cars. This endpoint provides comprehensive details about each car.
+- Get a Car `/api/v1/cars/:id` - **GET**: Enables users and administrators to view detailed information about a specific car identified by its Id.
+- Update a Car `/api/v1/cars/:id` - **PUT**: Allows administrators to update the details of an existing car, such as its description, features, or status.
+- Delete a Car `/api/v1/cars/:id` - **DELETE**: Performs a soft delete of a car, making it unavailable for bookings without permanently removing it from the database. This operation is restricted to administrators.
 
 ### Booking Management
 
-- Get All Bookings `/api/booking` - **GET**: Provides administrators with a comprehensive list of all bookings made by users. This is useful for managing and monitoring booking activities.
-- Book a Car `/api/booking` - **POST**: Allows users to book a car for a specified period. The booking details include the car ID, user ID, and rental duration.
-- Get User's Bookings `/api/booking/my-bookings` - **GET**: Enables users to view their booking history, helping them keep track of their rentals.
-- Return the Car `/api/cars/return` - **PUT**: Admins can mark a car as returned once the rental period is over, making it available for future bookings.
+- Get All Bookings `/api/v1/booking` - **GET**: Provides administrators with a comprehensive list of all bookings made by users. This is useful for managing and monitoring booking activities.
+- Book a Car `/api/v1/booking` - **POST**: Allows users to book a car for a specified period. The booking details include the car ID, user ID, and rental duration.
+- Get User's Bookings `/api/v1/booking/my-bookings` - **GET**: Enables users to view their booking history, helping them keep track of their rentals.
+- Return the Car `/api/v1/cars/return` - **PUT**: Admins can mark a car as returned once the rental period is over, making it available for future bookings.
+- Get booking details after payment `/api/v1/bookings/my-bookings/:transactionId` - **GET**: Get logged in user booking after payment by transaction Id
+- Cancel a booking while booking is pending `/api/v1/bookings/my-bookings/:id` - **DELETE**: Logged in user can cancel a booking while booking is pending
+- Update a booking while booking is in pending `/api/v1/bookings/my-bookings/:id` **PATCH**: Update a booking while booking is pending
+- Approve a booking `/api/v1/bookings/:id/approved` **PATCH**: Approve a booking by booking id (admin only)
+- Cancel a booking `/api/v1/bookings/:id/cancelled` **PATCH**: Cancel a booking by booking id (admin only)
+
+## Payments Management
+
+- Get all payments info `/api/v1/payments` **GET**: Get all payments (admin only)
+- Make payment `/api/v1/payments/pay` **POST**: Make payment after the car is returned
+- Get logged in user payments `/api/v1/payments/my-payments` **GET**: Get all payments for logged in user
+- Check payment confirmation `/api/v1/payments/confirmation` **POST**
+- Payment filed `/api/v1/payments/failed` **POST**
+- Payment cancelled`/api/v1/payments/cancelled` **GET**
 
 ### Access Control
 
@@ -83,13 +106,13 @@ To run the this project locally, follow these steps:
 ### 1. Clone the repository from GitHub:
 
 ```sh
-git clone https://github.com/noyonalways/l2-assignment-3.git
+git clone https://github.com/noyonalways/rentgo-api.git
 ```
 
 ### 2. Navigate into the project directory:
 
 ```sh
-cd l2-assignment-3
+cd rentgo-api
 ```
 
 ### 3. Install Dependencies (npm or yarn):
@@ -111,14 +134,23 @@ yarn
 
 ```sh
 # app configuration
-PORT=
-DATABASE_URL=
-NODE_ENV=
-JWT_ACCESS_TOKEN_SECRET=
-JWT_ACCESS_TOKEN_EXPIRES_IN=
-JWT_REFRESH_TOKEN_SECRET=
-JWT_REFRESH_TOKEN_EXPIRES_IN=
-BCRYPT_SALT_ROUND=
+PORT=your_port
+DATABASE_URL=your_database_url
+NODE_ENV=node_environment
+JWT_ACCESS_TOKEN_SECRET=jwt_access_token_secret
+JWT_ACCESS_TOKEN_EXPIRES_IN=jwt_access_token_secret_expires_time
+JWT_REFRESH_TOKEN_SECRET=jwt_refresh_token_secret
+JWT_REFRESH_TOKEN_EXPIRES_IN=jwt_refresh_token_expires_time
+BCRYPT_SALT_ROUND=bcrypt_salt_round
+
+# client and server urls
+API_BASE_URL=your_api_base_url
+CLIENT_BASE_URL=your_client_base_url
+
+# payment gateway configuration
+AAMARPAY_GATEWAY_BASE_URL=aamarpay_gateway_base_url
+AAMARPAY_STORE_ID=_aamarpay_store_id
+AAMARPAY_SIGNATURE_KEY=aamarpay_signature_key
 ```
 
 ### 4. Run the Application:
