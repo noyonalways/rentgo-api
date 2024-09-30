@@ -13,6 +13,14 @@ const payPayment = z.object({
         .refine((val) => mongoose.Types.ObjectId.isValid(val), {
           message: "Invalid Booking Id",
         }),
+      user: z
+        .string({
+          required_error: "User Id is required",
+          invalid_type_error: "User Id must be string",
+        })
+        .refine((val) => mongoose.Types.ObjectId.isValid(val), {
+          message: "Invalid User Id",
+        }),
       currency: z
         .enum([...PaymentCurrency] as [string, ...string[]], {
           required_error: "Payment currency is required",

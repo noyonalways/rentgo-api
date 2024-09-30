@@ -1,4 +1,5 @@
 import httpStatus from "http-status";
+import { QueryBuilder } from "../../builder";
 import { AppError } from "../../errors";
 import Booking from "../booking/booking.model";
 import User from "../user/user.model";
@@ -238,9 +239,83 @@ const paymentCancelled = async (transactionId: string) => {
   }
 };
 
+const userPayments = async (
+  user: Record<string, unknown>,
+  query: Record<string, unknown>,
+) => {
+  // Find the current user based on email
+  const currentUser = await User.findOne({ email: user.email });
+  if (!currentUser) {
+    throw new AppError("User not found", httpStatus.NOT_FOUND);
+  }
+
+  const userPaymentsQuery = new QueryBuilder(
+    Payment.find({ user: currentUser._id })
+      .populate({
+        path: "booking",
+        populate: [{ path: "car" }],
+      })
+      .populate("user"),
+    query,
+  )
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const result = await userPaymentsQuery.modelQuery;
+  const meta = await userPaymentsQuery.countTotal();
+
+  return { result, meta };
+};
+
+const getAllPayments = async (query: Record<string, unknown>) => {
+  const userPaymentsQuery = new QueryBuilder(
+    Payment.find()
+      .populate({
+        path: "booking",
+        populate: [{ path: "car" }],
+      })
+      .populate("user"),
+    query,
+  )
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const result = await userPaymentsQuery.modelQuery;
+  const meta = await userPaymentsQuery.countTotal();
+
+  return { result, meta };
+};
+
+// total revenue
+export const getTotalRevenue = async () => {
+  const result = await Payment.aggregate([
+    {
+      $group: {
+        _id: null,
+        totalRevenue: { $sum: "$amount" },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        totalRevenue: 1,
+      },
+    },
+  ]);
+
+  return { totalRevenue: result[0]?.totalRevenue || 0 };
+};
+
 export const paymentService = {
   payPayment,
   paymentConfirmation,
   paymentFailed,
   paymentCancelled,
+  userPayments,
+  getAllPayments,
+  getTotalRevenue,
 };

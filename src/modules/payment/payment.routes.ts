@@ -5,11 +5,28 @@ import { paymentController } from "./payment.controller";
 import { paymentValidationSchema } from "./payment.validation";
 const router: Router = Router();
 
+// get all payments (admin only)
+router.get("/", auth(USER_ROLE.admin), paymentController.getAllPayments);
+
+// get total revenue (admin only)
+router.get(
+  "/total-revenue",
+  auth(USER_ROLE.admin),
+  paymentController.getTotalRevenue,
+);
+
 router.post(
   "/pay",
   auth(USER_ROLE.user),
   validateRequest(paymentValidationSchema.payPayment),
   paymentController.payPayment,
+);
+
+// logged in user payment history
+router.get(
+  "/my-payments",
+  auth(USER_ROLE.user),
+  paymentController.userPayments,
 );
 
 // check the payment confirmation

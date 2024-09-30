@@ -14,6 +14,30 @@ const payPayment = catchAsync(async (req, res) => {
   });
 });
 
+const getAllPayments = catchAsync(async (req, res) => {
+  const { meta, result } = await paymentService.getAllPayments(req.query);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Payments retrieved successfully",
+    meta,
+    data: result,
+  });
+});
+
+// get total revenue
+const getTotalRevenue = catchAsync(async (req, res) => {
+  const result = await paymentService.getTotalRevenue();
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Payments retrieved successfully",
+    data: result,
+  });
+});
+
 const paymentConfirmation = catchAsync(async (req, res) => {
   const { transactionId } = req.query;
 
@@ -63,9 +87,27 @@ const paymentCancelled = catchAsync(async (req, res) => {
     );
 });
 
+const userPayments = catchAsync(async (req, res) => {
+  const { meta, result } = await paymentService.userPayments(
+    req.user,
+    req.query,
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "User payments retrieved successfully",
+    meta,
+    data: result,
+  });
+});
+
 export const paymentController = {
   payPayment,
   paymentConfirmation,
   paymentFailed,
   paymentCancelled,
+  userPayments,
+  getAllPayments,
+  getTotalRevenue,
 };

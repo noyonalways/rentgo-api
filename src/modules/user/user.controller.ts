@@ -26,7 +26,20 @@ const makeAdmin = catchAsync(async (req, res) => {
   });
 });
 
+// get all users
+const allUsers = catchAsync(async (req, res) => {
+  const { meta, result } = await userService.getAllUsers(req.query);
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "User updated to admin successfully",
+    meta,
+    data: result,
+  });
+});
+
 export const userController = {
   changeStatus,
   makeAdmin,
+  allUsers,
 };

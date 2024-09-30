@@ -10,6 +10,7 @@ export type TPayment = {
   paymentMethod: TPaymentMethod;
   status: TPaymentStatus;
   booking: Types.ObjectId;
+  user: Types.ObjectId;
   amount: number;
   paidAt: Date;
 };

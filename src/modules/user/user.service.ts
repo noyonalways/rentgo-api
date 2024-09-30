@@ -1,5 +1,6 @@
 import httpStatus from "http-status";
 import mongoose from "mongoose";
+import { QueryBuilder } from "../../builder";
 import { AppError } from "../../errors";
 import { TUser } from "./user.interface";
 import User from "./user.model";
@@ -55,8 +56,22 @@ const makeAdmin = async (id: string) => {
   );
 };
 
+const getAllUsers = async (query: Record<string, unknown>) => {
+  const userQuery = new QueryBuilder(User.find({}), query)
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const result = await userQuery.modelQuery;
+  const meta = await userQuery.countTotal();
+
+  return { result, meta };
+};
+
 export const userService = {
   findByProperty,
   changeStatus,
   makeAdmin,
+  getAllUsers,
 };

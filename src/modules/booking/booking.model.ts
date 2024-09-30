@@ -34,6 +34,10 @@ const bookingSchema = new Schema<TBooking>(
       type: String,
       required: [true, "Booking address is required"],
     },
+    phone: {
+      type: String,
+      required: [true, "Phone number is required"],
+    },
     nidOrPassport: {
       type: String,
       required: [true, "Nid or Passport number is required"],
