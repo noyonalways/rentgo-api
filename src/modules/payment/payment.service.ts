@@ -249,22 +249,13 @@ const userPayments = async (
     throw new AppError("User not found", httpStatus.NOT_FOUND);
   }
 
-  // Find the booking for the current user and populate 'user' and 'car' fields
-  const booking = await Booking.findOne({ user: currentUser._id });
-
-  if (!booking) {
-    throw new AppError("No booking found for this user", httpStatus.NOT_FOUND);
-  }
-
-  // Query for payments related to the booking, populate booking with 'user' and 'car'
   const userPaymentsQuery = new QueryBuilder(
-    Payment.find({ booking: booking._id }).populate({
-      path: "booking",
-      populate: [
-        { path: "user" }, // Populate user inside booking
-        { path: "car" }, // Populate car inside booking
-      ],
-    }),
+    Payment.find({ user: currentUser._id })
+      .populate({
+        path: "booking",
+        populate: [{ path: "car" }],
+      })
+      .populate("user"),
     query,
   )
     .filter()
@@ -278,10 +269,53 @@ const userPayments = async (
   return { result, meta };
 };
 
+const getAllPayments = async (query: Record<string, unknown>) => {
+  const userPaymentsQuery = new QueryBuilder(
+    Payment.find()
+      .populate({
+        path: "booking",
+        populate: [{ path: "car" }],
+      })
+      .populate("user"),
+    query,
+  )
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const result = await userPaymentsQuery.modelQuery;
+  const meta = await userPaymentsQuery.countTotal();
+
+  return { result, meta };
+};
+
+// total revenue
+export const getTotalRevenue = async () => {
+  const result = await Payment.aggregate([
+    {
+      $group: {
+        _id: null,
+        totalRevenue: { $sum: "$amount" },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        totalRevenue: 1,
+      },
+    },
+  ]);
+
+  return { totalRevenue: result[0]?.totalRevenue || 0 };
+};
+
 export const paymentService = {
   payPayment,
   paymentConfirmation,
   paymentFailed,
   paymentCancelled,
   userPayments,
+  getAllPayments,
+  getTotalRevenue,
 };

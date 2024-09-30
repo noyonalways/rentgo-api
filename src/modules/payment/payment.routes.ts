@@ -5,6 +5,16 @@ import { paymentController } from "./payment.controller";
 import { paymentValidationSchema } from "./payment.validation";
 const router: Router = Router();
 
+// get all payments (admin only)
+router.get("/", auth(USER_ROLE.admin), paymentController.getAllPayments);
+
+// get total revenue (admin only)
+router.get(
+  "/total-revenue",
+  auth(USER_ROLE.admin),
+  paymentController.getTotalRevenue,
+);
+
 router.post(
   "/pay",
   auth(USER_ROLE.user),

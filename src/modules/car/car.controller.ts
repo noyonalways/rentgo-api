@@ -16,15 +16,6 @@ const create = catchAsync(async (req, res) => {
 const getAll = catchAsync(async (req, res) => {
   const { meta, result } = await carService.getAll(req.query);
 
-  if (result.length <= 0) {
-    return sendResponse(res, {
-      success: false,
-      statusCode: httpStatus.NOT_FOUND,
-      message: "No Data found",
-      data: result,
-    });
-  }
-
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,

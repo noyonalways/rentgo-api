@@ -249,33 +249,38 @@ const cancelLoggedInUserBooking = async (
 
 const updateLoggedInUserBooking = async (
   user: Record<string, unknown>,
+  bookingId: string,
   payload: TBooking,
 ) => {
+  // Find the current user by email
   const currentUser = await User.findOne({ email: user.email });
 
   if (!currentUser) {
     throw new AppError("User not found", httpStatus.NOT_FOUND);
   }
 
-  const booking = await Booking.findOne({ user: currentUser._id });
+  const currentBooking = await Booking.findOne({
+    _id: bookingId,
+    user: currentUser._id,
+  });
 
-  if (!booking) {
+  if (!currentBooking) {
     throw new AppError("Booking not found", httpStatus.NOT_FOUND);
   }
 
-  if (booking?.status === "approved") {
+  if (currentBooking?.status === "approved") {
     throw new AppError("Booking is already approved", httpStatus.BAD_REQUEST);
   }
 
-  if (booking?.status === "cancelled") {
+  if (currentBooking?.status === "cancelled") {
     throw new AppError("Booking is already cancelled", httpStatus.BAD_REQUEST);
   }
 
-  if (booking?.status === "completed") {
+  if (currentBooking?.status === "completed") {
     throw new AppError("Booking is already completed", httpStatus.BAD_REQUEST);
   }
 
-  return Booking.findByIdAndUpdate(booking._id, payload, {
+  return Booking.findByIdAndUpdate(currentBooking._id, payload, {
     new: true,
     runValidators: true,
   });

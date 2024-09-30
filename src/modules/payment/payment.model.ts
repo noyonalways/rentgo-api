@@ -21,6 +21,11 @@ const paymentSchema = new Schema<TPayment>(
       ref: "Booking",
       required: [true, "Booking Id is required"],
     },
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: [true, "User Id is required"],
+    },
     currency: {
       type: String,
       enum: {

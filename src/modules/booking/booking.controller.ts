@@ -117,6 +117,7 @@ const cancelLoggedInUserBooking = catchAsync(async (req, res) => {
 const updateLoggedInUserBooking = catchAsync(async (req, res) => {
   const result = await bookingService.updateLoggedInUserBooking(
     req.user,
+    req.params.id,
     req.body,
   );
 
