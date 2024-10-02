@@ -294,6 +294,11 @@ const getAllPayments = async (query: Record<string, unknown>) => {
 export const getTotalRevenue = async () => {
   const result = await Payment.aggregate([
     {
+      $match: {
+        status: "paid", // Filter for payments with status "paid"
+      },
+    },
+    {
       $group: {
         _id: null,
         totalRevenue: { $sum: "$amount" },

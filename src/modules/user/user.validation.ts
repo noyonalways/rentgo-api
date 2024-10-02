@@ -19,7 +19,6 @@ const updateProfile = z.object({
         .string({
           invalid_type_error: "Profile image must be string",
         })
-        .url("Invalid Url")
         .optional(),
       dateOfBirth: z
         .string({
