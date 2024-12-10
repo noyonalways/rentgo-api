@@ -33,6 +33,26 @@ const signIn = catchAsync(async (req, res) => {
   });
 });
 
+// social login
+const socialLogin = catchAsync(async (req, res) => {
+  const { accessToken, refreshToken } = await authService.socialLogin(req.body);
+
+  res.cookie("refreshToken", refreshToken, {
+    secure: config.NODE_ENV === "production",
+    httpOnly: true,
+    maxAge: 1000 * 60 * 60 * 24 * 60 * 365,
+  });
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "User Sign In successfully",
+    data: {
+      token: accessToken,
+    },
+  });
+});
+
 // get me (current signed in user)
 const getMe = catchAsync(async (req, res) => {
   const user = await authService.getMe(req.user);
@@ -71,6 +91,7 @@ const generateNEwAccessToken = catchAsync(async (req, res) => {
 export const authController = {
   signUp,
   signIn,
+  socialLogin,
   getMe,
   updateProfile,
   generateNEwAccessToken,
