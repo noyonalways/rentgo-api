@@ -54,6 +54,38 @@ const singIn = async (payload: TUserSignIn) => {
   return { accessToken, refreshToken };
 };
 
+const socialLogin = async (payload: TUser) => {
+  let user = await User.findOne({ email: payload.email });
+  if (!user) {
+    user = await User.create(payload);
+  }
+
+  if (user?.status === "blocked") {
+    throw new AppError("User is blocked", httpStatus.FORBIDDEN);
+  }
+
+  const jwtPayload = {
+    email: user?.email,
+    role: user?.role,
+  };
+
+  const accessToken = User.createToken(
+    jwtPayload,
+    config.jwt_access_token_secret as string,
+    config.jwt_access_token_expires_in as string,
+  );
+
+  const refreshToken = User.createToken(
+    jwtPayload,
+    config.jwt_refresh_token_secret as string,
+    config.jwt_refresh_token_expires_in as string,
+  );
+
+  user.password = "";
+
+  return { accessToken, refreshToken };
+};
+
 // get signed in user
 const getMe = async (payload: JwtPayload) => {
   const user = await User.findOne({ email: payload.email });
@@ -122,6 +154,7 @@ const generateNewAccessToken = async (refreshToken: string) => {
 export const authService = {
   singUp,
   singIn,
+  socialLogin,
   getMe,
   updateProfile,
   generateNewAccessToken,

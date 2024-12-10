@@ -20,6 +20,12 @@ router.post(
   authController.signIn,
 );
 
+router.post(
+  "/social-login",
+  validateRequest(authValidationSchema.socialLogin),
+  authController.socialLogin,
+);
+
 router.get("/me", auth(USER_ROLE.user, USER_ROLE.admin), authController.getMe);
 
 router.patch(

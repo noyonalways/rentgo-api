@@ -24,7 +24,6 @@ const userSchema = new Schema<TUser, UserModel>(
     phone: {
       type: String,
       trim: true,
-      required: [true, "Phone is required"],
     },
     profileImage: {
       type: String,
@@ -51,14 +50,11 @@ const userSchema = new Schema<TUser, UserModel>(
     },
     password: {
       type: String,
-      required: [true, "Password is required"],
-      minlength: [6, "Password must be at least 6 characters"],
       select: 0,
     },
     dateOfBirth: {
       type: Date,
       trim: true,
-      required: [true, "Date of birth is required"],
     },
     isDeleted: {
       type: Boolean,
@@ -81,7 +77,6 @@ const userSchema = new Schema<TUser, UserModel>(
     address: {
       type: String,
       trim: true,
-      required: [true, "Address is required"],
     },
   },
   {
@@ -90,6 +85,10 @@ const userSchema = new Schema<TUser, UserModel>(
 );
 
 userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
+    return next();
+  }
+
   this.password = await bcrypt.hash(
     this.password,
     Number(config.bcrypt_salt_rounds),

@@ -20,10 +20,12 @@ const singUp = z.object({
           invalid_type_error: "Email must be string",
         })
         .email("Provide a valid email address"),
-      phone: z.string({
-        required_error: "Phone is required",
-        invalid_type_error: "Phone must be string",
-      }),
+      phone: z
+        .string({
+          required_error: "Phone is required",
+          invalid_type_error: "Phone must be string",
+        })
+        .optional(),
       profileImage: z
         .string({
           invalid_type_error: "Profile Image must be string",
@@ -44,11 +46,14 @@ const singUp = z.object({
           required_error: "Date of Birth is required",
           invalid_type_error: "Date of Birth must be string",
         })
-        .date("Invalid Date"),
-      address: z.string({
-        required_error: "Address is required",
-        invalid_type_error: "Address must be string",
-      }),
+        .date("Invalid Date")
+        .optional(),
+      address: z
+        .string({
+          required_error: "Address is required",
+          invalid_type_error: "Address must be string",
+        })
+        .optional(),
     })
     .strict(),
 });
@@ -73,6 +78,34 @@ const singIn = z.object({
     .strict(),
 });
 
+const socialLogin = z.object({
+  body: z
+    .object({
+      name: z.string({
+        required_error: "Name is required",
+        invalid_type_error: "Name must be string",
+      }),
+      email: z
+        .string({
+          required_error: "Email is required",
+          invalid_type_error: "Email must be string",
+        })
+        .email("Provide a valid email address"),
+      phone: z
+        .string({
+          required_error: "Phone is required",
+          invalid_type_error: "Phone must be string",
+        })
+        .optional(),
+      profileImage: z
+        .string({
+          invalid_type_error: "Profile Image must be string",
+        })
+        .optional(),
+    })
+    .strict(),
+});
+
 const refreshToken = z.object({
   cookies: z
     .object({
@@ -87,5 +120,6 @@ const refreshToken = z.object({
 export const authValidationSchema = {
   singUp,
   singIn,
+  socialLogin,
   refreshToken,
 };
